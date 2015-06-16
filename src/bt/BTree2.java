@@ -13,7 +13,9 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.DelayQueue;
 
-import org.apache.commons.lang.ArrayUtils;
+import javax.swing.tree.TreeNode;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 /*
  *                                           100
@@ -61,8 +63,6 @@ public class BTree2<T extends Comparable<T>> {
 			}
 		}
 	}
-	
-	
 	
 	// build tree from postorder post order inorder in order  
 	private BNode<T> buildTree(List<T> ioList, List<T> poList, int inOrderLower, int inOrderUpper,int postOrderLower, int postOrderUpper){
@@ -144,7 +144,7 @@ public class BTree2<T extends Comparable<T>> {
 		if(node == null){
 			return 0;
 		}
-		return 1 + Math.max(findHeight(node.left), findHeight(node.right));
+		return 1 + Math.max(findHeight(node.left), findHeight(node.right));		
 	}
 	
 	public boolean treeContains(T t){
@@ -167,28 +167,6 @@ public class BTree2<T extends Comparable<T>> {
 			}
 		}
 		return contains;
-	}
-	
-	public BNode<T> find(T t){
-		BNode<T> node = null;
-		if(root != null){
-			BNode<T> runnerNode = root;
-			
-			while(runnerNode != null){
-				if(runnerNode.getData().equals(t)){
-					node = runnerNode;
-					break;
-				}else{
-					if(runnerNode.getData().compareTo(t) >= 0){
-						runnerNode = runnerNode.left;
-					}else{
-						runnerNode = runnerNode.right;
-					}
-						
-				}
-			}
-		}
-		return node;
 	}
 	
 	
@@ -268,43 +246,65 @@ public class BTree2<T extends Comparable<T>> {
 		return list;
 	}
 	
-	private List<LinkedList<BNode<T>>> getLLAtLevel(BNode<T> node){
+	private LinkedList<List<BNode<T>>> getLL(BNode<T> node){
+		LinkedList<List<BNode<T>>> ll = new LinkedList<List<BNode<T>>>();
+		List<BNode<T>> l = new ArrayList<BNode<T>>();
 		
-		List<LinkedList<BNode<T>>> list = new ArrayList<LinkedList<BNode<T>>>();
-		
-		if(node == null){
-			return list;
-		}
-		
-		LinkedList<BNode<T>> ll = new LinkedList<BNode<T>>();
-		ll.add(node);
-		list.add(ll);
-		int level = 0;
-		
-		outerloop:
-		while(true){
+		if(node != null){
+			l.add(node);
 			
-			ll = new LinkedList<BNode<T>>();
-			for(BNode<T> n : list.get(level)){
-				if(n.left != null ){
-					ll.add(n.left);
-				}
-				if(n.right != null){
-					ll.add(n.right);
-				}
+		}
+		while(!l.isEmpty()){
+			ll.add(l);
+			List<BNode<T>> lt = new ArrayList<BNode<T>>();
+			for(BNode<T> n : l){
+				if(n.left != null)
+					lt.add(n.left);
+				if(n.right != null)
+					lt.add(n.right);
 			}
-				
-			if(ll.size() > 0){
-				list.add(level++,ll);
-				continue;
-			}else{
-				break outerloop;
-			}			
+			l = lt;
+		}
+		return ll;
+	}
+	
+	//https://gist.github.com/bittib/5620951
+	public void serialize(BNode<T> node){
+		StringBuilder sb = new StringBuilder();
+		serialize(node,sb);
+		System.out.println(sb);
+		
+		
+		String[] tokens = sb.toString().split(",");
+		BNode<Integer> root2 = deserialize(tokens);
+		System.out.println(root2);
+		
+	}
+	public void serialize(BNode<T> node, StringBuilder sb){
+		if(node == null){
+			sb.append("#,");
+		}else{
+			sb.append(node.getData()+",");
+			serialize(node.left, sb);
+			serialize(node.right, sb);
+		}
+	}
+	
+	int index = 0;
+	public BNode<Integer> deserialize(String[] tokens){
+		if(index >= tokens.length){
+			return null;
+		}
+		if(tokens[index].equals("#")){
+			index++;
+			return null;
 		}
 		
-		return list;
-		
-		
+		BNode<Integer> root2 = new BNode<Integer>();
+		root2.setData(Integer.parseInt(tokens[index++]));
+		root2.left = deserialize(tokens);
+		root2.right = deserialize(tokens);
+		return root2;
 	}
 	
 	private void build(BTree2<T> tree, BNode<T>[] na, int start, int length){
@@ -363,7 +363,7 @@ public class BTree2<T extends Comparable<T>> {
 	private BNode<T> mostCommonAncestorOfBinaryTreeNotBST(BNode<T> root, BNode<T> n1, BNode<T> n2){
 		if(covers(root.left, n1) && covers(root.left, n2)){
 			mostCommonAncestorOfBinaryTreeNotBST(root.left, n1, n2);			
-		}else if (covers(root.left,n1) && covers(root.right, n2)){
+		}else if (covers(root.right,n1) && covers(root.right, n2)){
 			mostCommonAncestorOfBinaryTreeNotBST(root.right, n1, n2);
 		}
 		return root;
@@ -381,6 +381,31 @@ public class BTree2<T extends Comparable<T>> {
 		
 	}
 	
+	private BNode<T> ios(BNode<T> node){
+		if(node == null){
+			return null;
+		}
+		if(node.right != null){
+			return getLeft(node.right);
+		}else{
+			BNode<T> p = node.parent;
+			BNode<T> t = node;
+			while(p != null && p.left.getData() == t.getData()){
+				p = p.parent;
+				t = p;
+			}
+		}
+		return null;
+	}
+	
+	private BNode<T> getLeft(BNode<T> node){
+		BNode	<T> left = null;
+		while(node != null){
+			left = node.left;			
+		}
+		return left;
+	}
+	
 	//http://www.youtube.com/watch?v=jSZ4e3cmh2A
 	private BNode<T> inOrderSuccessor(BNode<T> node){		
 		if(node.right != null){
@@ -396,8 +421,7 @@ public class BTree2<T extends Comparable<T>> {
 				node = p;				
 			}			
 			return p;
-		}
-		
+		}		
 	}
 	
 	private BNode<T> preOrderSucc(BNode<T> node) {
@@ -429,6 +453,40 @@ public class BTree2<T extends Comparable<T>> {
 		return null;
 	}
 	
+	static List<Integer> nl = new ArrayList<Integer>(); 
+	public void traverse(BNode<Integer> node){
+		if(node != null){
+			nl.add(node.getData());
+			siftUp();
+			traverse(node.getLeft());
+			traverse(node.getRight());
+		}
+		
+	}
+	//https://www.youtube.com/watch?v=LhhRbRXhB40
+	//p childs are at 2k+1 = 2k+2;
+	// p = (k-1)/2
+	public void siftUp(){
+		if(nl.size() > 1){
+			int k = nl.size() - 1;
+			int p = (k-1)/2;
+			
+			while(p >= 0 ){
+				if(nl.get(k) > nl.get(p)){
+					int temp = nl.get(k);
+					nl.set(k, nl.get(p));
+					//nl.remove(k+1);
+					nl.set(p, temp);
+					//nl.remove(p+1);
+					k = p;
+					p = (k-1)/2;
+				}else{
+					break;
+				}
+			}
+		}
+	}
+	
 	
 	
 	
@@ -443,17 +501,25 @@ public class BTree2<T extends Comparable<T>> {
 		tree.treeInsert(175);
 		tree.treeInsert(110);
 		
+		tree.traverse(tree.root);
+		System.out.println(BTree2.nl);
 		
 		
-		tree.preOrderTraversal(tree.root);
+		
+		/*tree.preOrderTraversal(tree.root);
 		System.out.println();
 		tree.inOrderTraversal(tree.root);
 		System.out.println("-----");
 		tree.preOrderTraversalReccursive(tree.root);
 		
-		BNode<Integer> n = tree.find(75);
-		n = tree.inOrderSuccessor(n);
-		n.show();
+		tree.treeContains(75);
+		//BNode<Integer> n = tree.inOrderSuccessor(75);
+		//n.show();
+		*/
+		
+		
+		//tree.getLL(tree.root);
+		tree.serialize(tree.root);
 		
 		//System.out.println("tree Height is :"+tree.findHeight(tree.root));
 		/*System.out.println("tree contains data 100 :"+tree.treeContains(100));

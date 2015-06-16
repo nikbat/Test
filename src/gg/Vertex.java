@@ -22,6 +22,11 @@ public class Vertex implements Comparable<Vertex>{
 	public int compareTo(Vertex o) {
 		return Double.compare(minDistance, o.minDistance);
 	}
+	
+	
+	
+	
+	
 
 	
 

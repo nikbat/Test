@@ -1,28 +1,35 @@
 package sa;
 
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
-import org.apache.commons.lang.ArrayUtils;
+//import org.apache.commons.lang.ArrayUtils; 
 
 public class Sort2 {
 
 	public static void main(String[] args) {
 		Sort2 so = new Sort2();
-		int[] array = { 6, 4, 9, 5, 1, 3, 2, 7, 8, 10 };
+		
+		//int[] data = {1,2,3,5,6,7,9,10};
+		//System.out.println(so.bsbs(data, 4, 0, data.length));
+		
+		//so.findNextHighestInteger();
+		
+		/*int[] array = { 6, 4, 9, 5, 1, 3, 2, 7, 8, 10 };
 		int[] data = so.mergeSort(array);
-		System.out.println(ArrayUtils.toString(data));
+		//System.out.println(ArrayUtils.toString(data));
 		int[] array2 = { 6, 4, 9, 5, 1, 3, 2, 7, 8, 10 };
 		int[] data2 = so.quickSort(array2);
-		System.out.println("q " + ArrayUtils.toString(data2));
+		//System.out.println("q " + ArrayUtils.toString(data2));
 
 		int[] a = { 0, 11, 12, 13, 14, 15 };
 		int[] fa = new int[array.length + a.length];
 		int[] oa = so.merge(fa, array, a);
-		System.out.println(ArrayUtils.toString(oa));
+		//System.out.println(ArrayUtils.toString(oa));
 		System.out.println(so.bs(oa, 14));
 		System.out.println(so.bs(oa, 11));
 		System.out.println(so.bs(oa, 15));
@@ -44,7 +51,8 @@ public class Sort2 {
 		// int[] a1 = {23,27,29,31,37,1,4,11,14,15,17,19};
 		// so.pivotedSearch(A, s, h, elem)
 		// int[] a1 = {23,27,29,31,37,9,11,14,15,17};
-		System.out.println(so.pivotedSearch(a1, 0, a1.length - 1, 27));
+		System.out.println(so.pivotedSearch(a1, 0, a1.length - 1, 27));*/
+		
 	}
 
 	private int[] mergeSort(int[] data) {
@@ -64,7 +72,7 @@ public class Sort2 {
 
 		return merge(data, left, right);
 	}
-
+	
 	private int[] merge(int[] data, int[] left, int[] right) {
 
 		int di = 0;
@@ -134,7 +142,7 @@ public class Sort2 {
 		return data;
 
 	}
-
+	
 	private int bs(int[] data, int e) {
 		int p = -1;
 
@@ -161,7 +169,9 @@ public class Sort2 {
 
 		return p;
 	}
+	
 
+	
 	private int msbs(int[] data, int e) {
 		int p = -1;
 
@@ -304,6 +314,43 @@ public class Sort2 {
 		}
 
 	}
+	
+	private int bsbs(int[] data, int e, int s, int l){
+		
+		if(l < s){
+			return -1;
+		}
+		
+		int mid = (l+s)/2;
+				
+		if(data[mid] == e){
+			return mid;
+		}else if(e < data[mid]){
+			return bsbs(data,e,s,mid-1);			
+		}else{
+			return bsbs(data,e,mid+1,l);
+		}
+	
+		
+	}
+	
+	private int bsrw(int[] A, int s, int h, int e){
+		if( h < s){
+			return -1;
+		}
+		
+		int mid = (h+s)/2;
+		if(A[mid] == e){
+			return mid;
+		}else if(A[mid] <= e){
+			bsrw(A,s,mid-1,e);
+		}else{
+			bsrw(A, mid+1, h, e);
+		}
+		
+		return -1;
+		
+	}
 
 	// odd even sort
 	Integer[] oe = { 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -334,9 +381,8 @@ public class Sort2 {
 			}
 		}
 	}
-
+	
 	// sort stack
-
 	public static Stack<Integer> sort(Stack<Integer> s) {
 		Stack<Integer> r = new Stack<Integer>();
 		while (!s.isEmpty()) {
@@ -348,6 +394,95 @@ public class Sort2 {
 		}
 		return r;
 	}
+	
+	
+	private static int rotatedaarray(int[] a, int e){
+		
+		int s = 0;
+		int l = a.length - 1;
+		
+		
+		while(s <= l){
+			int m = (s+l)/2;
+			if(a[m] == e){
+				return m;
+			}else if(a[s] <= a[m]){
+				if(a[s] <= e && e < a[m]){
+					l = m-1;
+				}else{
+					s = m+1;
+				}
+			}else{
+				if(a[m] < e && e <= a[l]){
+					s = m + 1;
+				}else{
+					l = m - 1;
+				}
+			}
+			
+		}
+		return -1;
+		
+	}
+	
+	static int rotated_binary_search(int A[], int N, int key) {
+		  int L = 0;
+		  int R = N - 1;
+		 
+		  while (L <= R) {
+		    // Avoid overflow, same as M=(L+R)/2
+		    int M = L + ((R - L) / 2);
+		    if (A[M] == key) return M;
+		 
+		    // the bottom half is sorted
+		    if (A[L] <= A[M]) {
+		      if (A[L] <= key && key < A[M])
+		        R = M - 1;
+		      else
+		        L = M + 1;
+		    }
+		    // the upper half is sorted
+		    else {
+		      if (A[M] < key && key <= A[R])
+		        L = M + 1;
+		      else 
+		        R = M - 1;
+		    }
+		  }
+		  return -1;
+	}
+	
+	static int A[] = {4, 5, 6, 7, 0, 1, 2};
+	
+	public int fr(int e){
+		int s = 0;
+		int l = A.length;
+		
+		while(s < l ){
+			int m = (s+l)/2;
+			
+			if(A[m] == e){
+				return e;
+			}
+			
+			if(A[s] < A[m]){
+				if(A[s] <= e && e < A[m]){
+					l = m-1;
+				}else{
+					s = m+1;
+				}
+			}else{
+				if(A[m] < e && e <= A[l]){
+					s = m+1;
+				}else{
+					l = m-1;
+				}
+			}
+		}
+		
+		return -1;
+	}
+	
 
 }
 

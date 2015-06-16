@@ -39,6 +39,8 @@ public class MyLinkedList2<T> {
 		}
 		return sb.toString();
 	}
+
+	
 	
 	public boolean isCyclic(){
 		

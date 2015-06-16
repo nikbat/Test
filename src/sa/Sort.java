@@ -6,11 +6,13 @@ public class Sort {
 
 	public static void main(String[] args) {
 
-		int[] array = { 6, 4, 9, 5, 1, 3, 2, 7 };
+		/*int[] array = { 6, 4, 9, 5, 1, 3, 2, 7 };
 		array = new Sort().merge(array);
 		array = new Sort().quick(array);
 		array = new Sort().quicksortSimple(array);
-		System.out.println(Arrays.toString(array));
+		System.out.println(Arrays.toString(array));*/
+		System.out.println(rotated_binary_search(A, A.length, 4));
+		System.out.println(rotatedaarray(A, 4));
 
 	}
 
@@ -58,7 +60,7 @@ public class Sort {
 		}
 		return data;
 	}
-
+	
 	/*
 	 * Quicksort is a divide-and-conquer algorithm that involves choosing a
 	 * pivot value from a data set and splitting the set into two subsets: a set
@@ -114,8 +116,9 @@ public class Sort {
 		System.arraycopy(right, 0, data, left.length + 1, right.length);
 
 		return data;
-
 	}
+	
+	
 
 	public int[] quicksortSimple(int[] data) {
 		if (data.length < 2) {
@@ -153,20 +156,7 @@ public class Sort {
 		System.arraycopy(right, 0, data, left.length + 1, right.length);
 		return data;
 	}
-
-	static void insertionSort(int[] arr) {
-		int i, j, mv;
-		for (i = 1; i < arr.length; i++) {
-			mv = arr[i];
-			j = i;
-			while (j > 0 && arr[j - 1] > mv) {
-				arr[j] = arr[j - 1];
-				j--;
-			}
-			arr[j] = mv;
-		}
-	}
-
+	
 	/*
 	 * Insertion sort is another simple sorting algorithm. It builds a sorted
 	 * array (or list) one element at a time by comparing each new element to
@@ -175,20 +165,79 @@ public class Sort {
 	 * simple implementation of insertion sort is as follows:
 	 */
 
-	public void insertionSort2(int[] data) {
-		for (int which = 1; which < data.length; ++which) {
-			int val = data[which];
-			for (int i = 0; i < which; ++i) {
-				if (data[i] > val) {
-					System.arraycopy(data, i, data, i + 1, which - i);					
-					data[i] = val;
-					break;
+	public int[] is(int[] data){
+		
+		for(int i=1; i < data.length; i++){
+			int j = i;
+			while(j > 0){
+				if(data[j] < data[j-1]){
+					//swap;
+					j--;
 				}
-			}
+			}			
 		}
+		return data;
 	}
-	
+		
+		
 	
 	
 
+	static int rotated_binary_search(int A[], int N, int key) {
+		  int L = 0;
+		  int R = N - 1;
+		 
+		  while (L <= R) {
+		    // Avoid overflow, same as M=(L+R)/2
+		    int M = L + ((R - L) / 2);
+		    if (A[M] == key) return M;
+		 
+		    // the bottom half is sorted
+		    if (A[L] <= A[M]) {
+		      if (A[L] <= key && key < A[M])
+		        R = M - 1;
+		      else
+		        L = M + 1;
+		    }
+		    // the upper half is sorted
+		    else {
+		      if (A[M] < key && key <= A[R])
+		        L = M + 1;
+		      else 
+		        R = M - 1;
+		    }
+		  }
+		  return -1;
+	}
+	
+	static int A[] = {4, 5, 6, 7, 0, 1, 2};
+	
+	private static int rotatedaarray(int[] a, int e){
+		
+		int s = 0;
+		int l = a.length - 1;
+		
+		
+		while(s <= l){
+			int m = (s+l)/2;
+			if(a[m] == e){
+				return m;
+			}else if(a[s] <= a[m]){
+				if(a[s] <= e && e < a[m]){
+					l = m-1;
+				}else{
+					s = m+1;
+				}
+			}else{
+				if(a[m] < e && e <= a[l]){
+					s = m + 1;
+				}else{
+					l = m - 1;
+				}
+			}
+			
+		}
+		return -1;
+		
+	}	
 }

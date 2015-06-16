@@ -51,13 +51,13 @@ public class Recursion {
 	}
 
 	/*
-	 * PROB LEM Implement a routine that prints all possible orderings of the
+	 * PROB LEMâ€‚Implement a routine that prints all possible orderings of the
 	 * characters in a string. In other words, print all permutations that use
 	 * all the characters from the original string. For example, given the
-	 * string “hat”, your function should print the strings “tha”, “aht”, “tah”,
-	 * “ath”, “hta”, and “hat”. Treat each character in the input string as a
-	 * distinct character, even if it is repeated. Given the string “aaa”, your
-	 * routine should print “aaa” six times. You may print the permutations in
+	 * string â€œhatâ€�, your function should print the strings â€œthaâ€�, â€œahtâ€�, â€œtahâ€�,
+	 * â€œathâ€�, â€œhtaâ€�, and â€œhatâ€�. Treat each character in the input string as a
+	 * distinct character, even if it is repeated. Given the string â€œaaaâ€�, your
+	 * routine should print â€œaaaâ€� six times. You may print the permutations in
 	 * any order you choose.
 	 */
 	private StringBuilder out = new StringBuilder();
@@ -80,6 +80,19 @@ public class Recursion {
 			out.setLength(out.length() - 1);
 		}
 	}
+	
+	private void combine(int start ){
+	    for( int i = start; i < in.length() - 1; ++i ){
+	        out.append( in.charAt(i) );
+	        System.out.println( out );
+	        combine( i + 1);
+	        out.setLength( out.length() - 1 );
+	    }
+	    
+	    out.append( in.charAt( in.length() - 1 ) );
+	    System.out.println( out );
+	    out.setLength( out.length() - 1 );
+	}
 
 	/*
 	 * print a string in a reverse order
@@ -96,7 +109,7 @@ public class Recursion {
 	private final int[] phoneNum = { 4, 0, 8, 5, 9, 3, 4, 2, 4, 9 };
 	private char[] result = new char[PHONE_NUMBER_LENGTH];
 
-	public void printWords() {
+	/*public void printWords() {
 		// Initialize result with first telephone word
 		for (int i = 0; i < PHONE_NUMBER_LENGTH; ++i)
 			result[i] = getCharKey(phoneNum[i], 1);
@@ -105,16 +118,15 @@ public class Recursion {
 				System.out.print(result[i]);
 			}
 			System.out.print('\n');
-			/*
-			 * Start at the end and try to increment from right to left.
-			 */
+			
+			//Start at the end and try to increment from right to left.
+			 
 			for (int i = PHONE_NUMBER_LENGTH - 1; i >= -1; --i) {
 				if (i == -1) // if attempted to carry past leftmost digit,
 					return; // we're done, so return
-				/*
-				 * Start with high value, carry case so 0 and 1 special cases
-				 * are dealt with right away
-				 */
+				
+				  //Start with high value, carry case so 0 and 1 special cases				  are dealt with right away
+				 
 				if (getCharKey(phoneNum[i], 3) == result[i] || phoneNum[i] == 0
 						|| phoneNum[i] == 1) {
 					result[i] = getCharKey(phoneNum[i], 1);
@@ -128,6 +140,6 @@ public class Recursion {
 				}
 			}
 		}
-	}
+	}*/
 
 }

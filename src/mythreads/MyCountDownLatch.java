@@ -33,6 +33,7 @@ public class MyCountDownLatch {
 		
 		
 		
+		
 	}
 	
 	class Service implements Callable<String> {
@@ -45,7 +46,7 @@ public class MyCountDownLatch {
 		@Override
 		public String call(){
 			try{
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 				latch.countDown();
 			}catch(Exception e){
 				e.printStackTrace();
