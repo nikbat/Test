@@ -436,7 +436,7 @@ public class Sort2 {
 		 
 		    // the bottom half is sorted
 		    if (A[L] <= A[M]) {
-		      if (A[L] <= key && key < A[M])
+		      if (A[L] <= key && key < A[M]) 
 		        R = M - 1;
 		      else
 		        L = M + 1;
