@@ -11,7 +11,7 @@ public class ArrayQueue<AnyType> implements  QueueInterface<AnyType>, Iterable<A
 	private AnyType[] A;
 
 	/**
-	*  Creates a new empty queue.
+	*  Creates a new empty queue. 
 	*/
 	public ArrayQueue ()
 	{
