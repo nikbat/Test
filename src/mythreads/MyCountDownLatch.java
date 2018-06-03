@@ -24,12 +24,15 @@ public class MyCountDownLatch {
 		Future<String> f2 = s.submit(new Service("Service2", latch));
 		Future<String> f3 = s.submit(new Service("Service3", latch));
 		Future<String> f4 = s.submit(new Service("Service4", latch));
-		latch.await(1, TimeUnit.SECONDS);
+		//latch.await(1, TimeUnit.SECONDS);
+		System.out.println("waiting");
+		latch.await();
 		System.out.println(f1.get());
 		System.out.println(f2.get());
 		System.out.println(f3.get());
 		System.out.println(f4.get());
 		System.out.println("All services is up lets start ");
+		s.shutdown();
 		
 		
 		
@@ -46,8 +49,10 @@ public class MyCountDownLatch {
 		@Override
 		public String call(){
 			try{
-				Thread.sleep(1000);
+				System.out.println("First thread done");
+				Thread.sleep(2000);
 				latch.countDown();
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			}

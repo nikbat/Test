@@ -14,7 +14,7 @@ public class MySemaphore2 {
 	
 	//BlockingQueue<Integer> mylist = new LinkedBlockingQueue<Integer>(2);
 	LinkedList<Integer> mylist = new LinkedList<Integer>();
-	Semaphore s = new Semaphore(5);
+	Semaphore s = new Semaphore(1,true);
 			
 	public static void main(String[] args) throws Exception{
 		

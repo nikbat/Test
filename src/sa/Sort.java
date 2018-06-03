@@ -116,9 +116,7 @@ public class Sort {
 		System.arraycopy(right, 0, data, left.length + 1, right.length);
 
 		return data;
-	}
-	
-	
+	}	
 
 	public int[] quicksortSimple(int[] data) {
 		if (data.length < 2) {
@@ -178,9 +176,31 @@ public class Sort {
 		}
 		return data;
 	}
-		
-		
 	
+	private int bs(int[] data, int e) {
+		int p = -1;
+		int s = 0;
+		int l = data.length - 1;
+		int m = data.length / 2;
+
+		while (s <= l) {
+			if (e == data[m]) {
+				// found element break;
+				p = m;
+				break;
+			} else if (e > data[m]) {
+				// element is in a right block, so move s and find new middle
+				// element
+				s = m + 1;
+			} else {
+				l = m - 1;
+			}
+
+			m = (s + l) / 2;
+		}
+
+		return p;
+	}
 	
 
 	static int rotated_binary_search(int A[], int N, int key) {

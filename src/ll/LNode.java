@@ -4,8 +4,11 @@ public class LNode<E> {
 	E data;
 	LNode<E> next;
 	
+	LNode(){
+		
+	}
+	
 	public LNode(E data) {
-		super();
 		this.data = data;
 	}
 

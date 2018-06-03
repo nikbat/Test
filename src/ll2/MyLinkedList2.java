@@ -1,5 +1,9 @@
 package ll2;
 
+import java.util.LinkedList;
+
+import ll.LNode;
+
 public class MyLinkedList2<T> {
 	
 	private L2Node<T> root;
@@ -73,6 +77,81 @@ public class MyLinkedList2<T> {
 		return false;
 	}
 	
+	public void partitionList(MyLinkedList2<Integer> ll,  int i){
+		L2Node<Integer> left = null;
+		L2Node<Integer> right = null;
+		L2Node<Integer> leftStart = null;
+		L2Node<Integer> rightStart = null;
+		
+		L2Node<Integer> current = ll.root;
+		
+		while(current != null ){
+			if(current.getData() < i){
+				if(left == null){
+					left = new L2Node<>(current.getData());
+					leftStart = left;					
+				}else{
+					L2Node<Integer> temp = new L2Node(current.getData());
+					left.setNext(temp);
+					left = temp;					
+				}
+			}else{
+				if(right == null){
+					right = new L2Node<>(current.getData());
+					rightStart = right;
+				}else{
+					L2Node<Integer> temp = new L2Node(current.getData());
+					right.setNext(temp);
+					right = temp;
+				}
+			}
+			
+			current = current.getNext();
+		}
+		
+		if(leftStart != null){
+			left.setNext(rightStart);
+		}
+		
+		MyLinkedList2<Integer> l = new MyLinkedList2<>();
+		l.root = leftStart;
+		System.out.println(l.print());
+		
+		
+	
+		
+				
+	}
+	
+	public L2Node<Integer> s(L2Node<Integer> la, L2Node<Integer> lb, int carry){
+		L2Node<Integer> n = null;
+		if(la == null && lb == null){
+			return null;
+		}else{
+			
+			int data = carry;
+			if(la != null){
+				data = data+la.getData();
+			}
+			if(lb != null){
+				data = data+lb.getData();
+			}
+			n = new L2Node(data%10);
+			n.setNext(s(la.getNext(), lb.getNext(), data/10));
+			return n;
+		}
+	}
+	
+	public String printList(L2Node<String> n){
+		if(n == null){
+			return "";
+		}else{
+			return printList(n.getNext()) + n.getData();
+		}
+	}
+	
+	
+	
 	public static void main(String[] args){
 		MyLinkedList2<String> ll = new MyLinkedList2<String>();
 		ll.add("A");
@@ -80,16 +159,43 @@ public class MyLinkedList2<T> {
 		ll.add("C");
 		ll.add("D");
 		ll.add("E");
+		ll.add("B");
 		ll.add("F");
 		ll.add("G");
 		ll.add("H");
+		ll.add("A");
 		ll.add("I");
 		ll.add("J");
 		ll.add("K");
 		ll.add("D");
 		
+		System.out.println(ll.printList(ll.root));
+		
 		System.out.println(ll.print());
 		ll.isCyclic();
+		
+		MyLinkedList2<Integer> l1 = new MyLinkedList2<Integer>();
+		l1.add(3);
+		l1.add(5);
+		l1.add(8);
+		l1.add(5);
+		l1.add(10);
+		l1.add(2);
+		l1.add(1);
+		
+		l1.partitionList(l1, 5);
+		
+		MyLinkedList2<Integer> la = new MyLinkedList2<>();
+		la.add(7);
+		la.add(1);
+		la.add(6);
+		MyLinkedList2<Integer> lb = new MyLinkedList2<>();
+		lb.add(5);
+		lb.add(9);
+		lb.add(2);
+		L2Node<Integer> n = l1.s(la.root, lb.root, 0);
+		System.out.println(n);
+		
 	}
 }
 

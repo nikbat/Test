@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.sun.javafx.binding.StringFormatter;
+
 public class StringArrays2 {
 
 	public static void main(String[] args) {
@@ -26,6 +28,15 @@ public class StringArrays2 {
 		// sa.queenpposition();
 		//sa.rotateSingleAraray(4);
 		//sa.rrot(ra, ra.length, 4);
+		//sa.printDiagonal();
+		//multTables(5);
+		//System.out.println(sa.minimumIntegerToMultiplyToGetSum(37));
+		//sa.mitgs(21);
+		//sa.printDigonal();
+		sa.pd();
+		//sa.printDiagonal();
+		
+		
 		
 		//System.out.println(so.solveMaze(paths, 0, 0, 1, 2, 0, 0, true,false,true,false));
 		//System.out.println(so.solveMaze(paths, 0, 0, 1, 2, 0, 0, true,true,false,false));
@@ -40,15 +51,21 @@ public class StringArrays2 {
 		/*System.out.println(so.solveMaze(paths, 2, 4, 4, 0, 0, 0, true,false,true,false));
 		System.out.println(so.solveMaze(paths, 2, 4, 4, 0, 0, 0, true,true,false,false));
 		System.out.println(so.solveMaze(paths, 2, 4, 4, 0, 0, 0, false,true,true,false));
-		System.out.println(so.solveMaze(paths, 2, 4, 4, 0, 0, 0, true,false,false,true));*/
-
-		
-		System.out.println(sa.solveMazeUtil(paths, 0, 0, finalM, 1, 2));
-		System.out.println(sa.solveMazeUtil(paths, 4, 4, finalM, 3, 4));
-		
+		System.out.println(so.solveMaze(paths, 2, 4, 4, 0, 0, 0, true,false,false,true));*/		
 
 	}
-
+	
+	public void pd(int N){		
+		int[] a = {1,2,3,4,5,6,7,8,9};
+		for(int i = 0; i < a.length; i++){
+			int t = a[(i+N) % N]; 
+			a[(i+N) % N] = a[i];
+			a[i] = t;
+		}
+		
+		System.out.println(ArrayUtils.toString(a));
+	}
+	
 	private void deleteChars(String a, String b) {
 		// convert all String value of b into 256 boolean array
 		boolean[] cr = new boolean[256];
@@ -292,7 +309,7 @@ public class StringArrays2 {
 		for (int i = 0; i < ra.length; i++) {
 			fa[(i + n) % l] = ra[i];
 		}
-		System.out.println(ra);
+		System.out.println(ArrayUtils.toString(ra));
 	}
 
 	void rotater(int a[], int size, int n) {
@@ -335,9 +352,67 @@ public class StringArrays2 {
 		return 0; // if ( i==n || j== -1 )
 	}
 
-	int[][] sa = { { 10, 20, 30, 40 }, { 15, 25, 35, 45 }, { 27, 29, 37, 48 },
-			{ 32, 33, 39, 50 }, };
+	int[][] sa = { 
+			{ 10, 20, 30, 40 }, 
+			{ 15, 25, 35, 45 }, 
+			{ 27, 29, 37, 48 },
+			{ 32, 33, 39, 50 }, 
+			};
+	
+	private void pd(){
+		int r = 0;
+		int c = 0;
+		for(int i = 0; i < sa.length; i++){
+			c = i;
+			r = 0;
+			for(int j = 0; j <= i; j++){
+				System.out.print(sa[r++][c--]);
+			}
+			
+			System.out.println();
+		}
+		
+		for(int i = sa.length -1; i >= 0; i--){
+			c = i;
+			r = 1;
+			for(int j = 0; j <	 i; j++){
+				System.out.print(sa[r++][c--]);
+			}
+			
+			System.out.println();
+		}
+	}
 
+	
+	//Diagnal diognal 
+	private void printDigonal(){
+		int r = 0;
+		int c = r;		
+		for(int i = 0; i < sa.length; i++){
+			r = 0;
+			c = i;
+			for(int j = 0; j <= i; j++){				
+				while(r <= i && c >= 0){
+					System.out.print(sa[r++][c--]);
+				}	
+			}
+			System.out.println();
+		}
+		
+		for(int i = sa.length -1; i > 0; i--){
+			r = 1;
+			c = i;
+			for(int j = 0; j <= i; j++){
+				while(r < sa.length && c > 0){
+					System.out.print(sa[r++][c--]);
+				}
+			}
+			System.out.println();
+		}		
+		
+	}
+	
+	
 	private void printDiagonal() {
 		Set<Integer> s = new HashSet<Integer>();
 
@@ -407,8 +482,7 @@ public class StringArrays2 {
 
 	}
 
-	public boolean checkdiagonal(int[][] game, int[] rows, int[] columns,
-			int i, int j) {
+	public boolean checkdiagonal(int[][] game, int[] rows, int[] columns,int i, int j) {
 		int k = game.length;
 		int l = game[0].length;
 		int m = i;
@@ -461,7 +535,7 @@ public class StringArrays2 {
 		int[] columns = new int[8];
 
 		for (int i = 0; i < game.length; i++) {
-			for (int j = 0; j < game.length; j++) {
+			for (int j = 0; j < game[0].length; j++) {
 
 				if (rows[i] == 0 && columns[j] == 0) {
 					// check digonal
@@ -510,7 +584,24 @@ public class StringArrays2 {
 			System.out.println();
 		}
 	}
-
+	
+	private void mitgs(int N){
+		PriorityQueue<Integer> q = new PriorityQueue<>();
+		int CN = N;
+		for(int i = 2; i < CN; i++){
+			if(N%i == 0){
+				q.add(i);
+				N = N/i;
+				i--;
+			}
+		}
+		
+		if(N != 1){
+			return;
+		}
+		
+		System.out.println(q);
+	}
 	private int minimumIntegerToMultiplyToGetSum(int N) {
 		PriorityQueue<Integer> digits = new PriorityQueue<Integer>();
 
@@ -549,6 +640,51 @@ public class StringArrays2 {
 		
 	};
 	
+	int counter = 0;
+	public boolean solveMaze(int[][] paths, int x, int y, int i, int j){
+		if(stepMaze(paths,x,y,i,j)){
+			paths[x][y] = 5;
+			return true;
+		}
+		return false;
+	}	
+	
+	public boolean stepMaze(int[][] paths, int x, int y, int i, int j){
+		counter++;
+		if(x == i && y == j){
+			return true;
+		}
+		
+		if(x < 0 || x >= paths.length || y < 0 || y >= paths.length){
+			return false;
+		}
+		
+		if(paths[x][y] == 1 || paths[x][y] == 2){
+			return false;
+		}
+		
+		paths[x][y] = 2;
+		if(stepMaze(paths, x, y+1, i, j)){
+			return true;
+		}
+		
+		if(stepMaze(paths, x-1, y, i, j)){
+			return true;
+		}
+		
+		if(stepMaze(paths, x+1, y, i, j)){
+			return true;
+		}
+		
+		if(stepMaze(paths, x, y-1, i, j)){
+			return true;
+		}
+		
+		paths[x][y] = 0;
+		
+		return false;
+	}
+	
 	boolean isSafe(int[][] paths, int i, int j ){
 		if(i >=0 && i < paths.length && j >= 0 && j < paths[0].length && paths[i][j] == 0){
 			return true;
@@ -556,57 +692,7 @@ public class StringArrays2 {
 		return false;
 	}
 	
-	//boolean solveMaze(int[][] paths, int i, int j, int[][] finalM ,int k , int l, int m, int n , boolean A){
-	boolean solveMaze(int[][] paths, int i, int j,int k , int l, int m, int n , boolean forward, boolean backward, boolean up, boolean down){
-		if(i == k && j == l){
-			System.out.println("FOUND");
-			return true;
-		}
-		
-		if(isSafe(paths, i, j)){
-			//finalM[i][j] = 1;
-			
-			if(down && forward){
-				if(solveMaze(paths, i+1, j, k, l, i, j, forward,backward,up,down)){
-					return true;
-				}
-				if(solveMaze(paths, i, j+1, k, l, i, j, forward,backward,up,down)){
-					return true;
-				}
-			}else if(up && backward){
-				
-				if(solveMaze(paths, i-1, j, k, l, i, j, forward,backward,up,down)){
-					return true;
-				}
-				if(solveMaze(paths, i, j-1, k, l, i, j, forward,backward,up,down)){
-					return true;
-				}
-				
-				//i = m;
-				//j = n;
-			}else if(down && backward){
-				if(solveMaze(paths, i+1, j, k, l, i, j, forward,backward,up,down)){
-					return true;
-				}
-				if(solveMaze(paths, i, j-1, k, l, i, j, forward,backward,up,down)){
-					return true;
-				}
-			}else if(up && forward){
-				if(solveMaze(paths, i-1, j, k, l, i, j, forward,backward,up,down)){
-					return true;
-				}
-				if(solveMaze(paths, i, j+1, k, l, i, j, forward,backward,up,down)){
-					return true;
-				}
-			}
-			//finalM[i][k] = 0;
-			return false;
-		}
-		
-		return false;
-	}
-	
-	public boolean solveMazeUtil(int[][] paths, int i, int j, int[][] finalM, int l, int m){
+	public boolean solveMazeInOneDirection(int[][] paths, int i, int j, int[][] finalM, int l, int m){
 		//if(x == paths.length && y == paths[0].length){
 		
 		int x = i;
@@ -622,12 +708,12 @@ public class StringArrays2 {
 	        finalM[x][y] = 1;
 	        
 	        /* Move forward in x direction */
-	        if (solveMazeUtil(paths, x+1, y, finalM, l,m) == true)
+	        if (solveMazeInOneDirection(paths, x+1, y, finalM, l,m) == true)
 	            return true;
 	 
 	        /* If moving in x direction doesn't give solution then
 	           Move down in y direction  */
-	        if (solveMazeUtil(paths, x, y+1, finalM, l, m) == true)
+	        if (solveMazeInOneDirection(paths, x, y+1, finalM, l, m) == true)
 	            return true;
 	 
 	        /* If none of the above movements work then BACKTRACK: 
@@ -641,37 +727,6 @@ public class StringArrays2 {
 		
 		return false;
 	}
-	
-	
-	/*public boolean solveMazeUtil(int[][] paths, int x, int y, int[][] finalM, int l, int m){
-		//if(x == paths.length && y == paths[0].length){
-		if(x == l && y == m){
-	        finalM[x][y] = 1;
-	        return true;
-	    }
-		
-		if(isSafe(paths, x, y) == true){
-	        // mark x,y as part of solution path
-	        finalM[x][y] = 1;
-	 
-	        // Move forward in x direction 
-	        if (solveMazeUtil(paths, x+1, y, finalM, l,m) == true)
-	            return true;
-	 
-	        // If moving in x direction doesn't give solution then
-	        //   Move down in y direction  
-	        if (solveMazeUtil(paths, x, y+1, finalM, l, m) == true)
-	            return true;
-	 
-	        // If none of the above movements work then BACKTRACK: 
-	        //    unmark x,y as part of solution path 
-	        finalM[x][y] = 0;
-	        
-	        return false;
-	    } 
-		
-		return false;
-	}*/
 	
 	
 	public String formatRGB(int r, int g, int b) {
@@ -694,5 +749,22 @@ public class StringArrays2 {
 		int[] i = { 1, 2, 3, 4, 5, 6, 7, 8 };
 		int[] j = { 1, 2, 3, 4, 5, 6, 7, 8 };
 	}
+	
+	private void printFloyd(){
+		int count = 0;
+		for(int i = 1; i< 16; i++){
+			if(count < i){
+				System.out.print(i);
+				count++;
+			}else{
+				System.out.print("");
+				count = 0;
+			}
+		}
+	}
+	
+	
+	
+	 
 
 }

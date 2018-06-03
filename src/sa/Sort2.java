@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 //import org.apache.commons.lang.ArrayUtils; 
 
 public class Sort2 {
@@ -41,10 +43,8 @@ public class Sort2 {
 		int[] aa = { 15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 15 };
 		System.out.println(so.msbs(aa, 20));
 
-		String[] sa = { "at", "", "", "", "", "ball", "car", "", "", "dad", "",
-				"" };
+		String[] sa = { "at", "", "", "", "", "ball", "car", "", "", "dad", "",	"" };
 		System.out.println("sa    " + so.bsss(sa, "ball", 0, sa.length - 1));
-
 		// int i = 7516192768;
 		int i = 939524102;
 
@@ -53,8 +53,100 @@ public class Sort2 {
 		// int[] a1 = {23,27,29,31,37,9,11,14,15,17};
 		System.out.println(so.pivotedSearch(a1, 0, a1.length - 1, 27));*/
 		
+		String[] sa = { "at", "", "", "", "", "ball", "car", "", "", "dad", "",	"" };
+		System.out.println(so.sparseSearch(sa, "ball", 0, sa.length-1));
+		
+		
+		//int[] data = {1,2,3,5,6,7,9,10};
+		//System.out.println(so.bs(data, 6, 0, data.length));
+		
+		//String[] sa = { "at", "", "", "", "", "ball", "car", "", "", "dad", "",	"" };
+		//System.out.println("sa    " + so.ss(sa, "no", 0, sa.length - 1));
+		
+		//int[] data = {1,2,3,4,5,6,7,8};
+		//so.zigzag(data);
+		//System.out.println(ArrayUtils.toString(data));
+		
+		int[] data1 = {1,2,3,4,5,6,7,8};
+		int[] data2 = {4, 3, 7, 8, 6, 2, 1};
+		so.zigzag1(data1);
+		System.out.println("zigzag"+ArrayUtils.toString(data1));
+		
+		int[] A={1,2,7,12,16,-1,-1,-1,-1};  
+		int[] B={4,5,8,14};
+		so.msa(A, B, 5);
+		System.out.println("ms"+ArrayUtils.toString(A));
+		
+		//int[] A={15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14};
+		//System.out.println(so.searchRotatedArray(A, 16, 0, A.length-1));
+		
+		int[][] data = 	{
+				 {15,20,40,85},
+				 {20,35,80,95},
+				 {30,55,95,105},
+				 {40,80,100,120}
+				};
+		
+		//System.out.println(so.searchElementInTwoDimensionalSortedArray(data, 120));
+		System.out.println(Math.abs((1-2)));
+		so.ss();
+		String[] A1 = {"at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""};
+		System.out.println(so.s1(A1, "car", 0, A1.length-1));
+				
 	}
+	
+	//int[] a = {15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14}; 
 
+	//{15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14}
+	//{"at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""}
+	public int s1(String[] A, String e, int s, int l){
+		while(l > s){
+			while(A[l].equals("")){
+				l--;
+			}
+			if(l < s){
+				return -1;
+			}
+			int mid = (s+l)/2;
+			
+			while(A[mid].equals("")){
+				mid++;
+			}
+			
+			if(e.equals(A[mid])){
+				return mid;
+			}else if(A[mid].compareTo(e) < 0){
+				s = mid + 1;
+			}else{
+				l = mid -1;
+			}
+		}
+		return -1;
+		
+		
+	}
+	
+	//int[] A={1,2,7,12,16,-1,-1,-1,-1};  
+	//int[] B={4,5,8,14};
+	
+	public void msa(int[] a, int[] b, int trueLength){
+		int i = trueLength -1;
+		int j = b.length-1;
+		int k = a.length-1;
+		
+		while(i >= 0 && j >= 0){
+			if(a[i] > a[j]){
+				a[k--] = a[i--];
+			}else{
+				a[k--] = b[j--];
+			}
+		}
+		
+		while(j >= 0){
+			a[k--] = b[j--];
+		}
+	}
+	
 	private int[] mergeSort(int[] data) {
 		if (data.length < 2) {
 			return data;
@@ -112,9 +204,10 @@ public class Sort2 {
 				++leftCount;
 			}
 		}
-
+		
 		System.out.println(data.length);
 		System.out.println(data.length - (leftCount + 1));
+		
 		int[] left = new int[leftCount];
 		int[] right = new int[data.length - (leftCount + 1)];
 
@@ -140,37 +233,24 @@ public class Sort2 {
 		System.arraycopy(right, 0, data, left.length + 1, right.length);
 
 		return data;
-
 	}
 	
-	private int bs(int[] data, int e) {
-		int p = -1;
-
-		int s = 0;
-		int l = data.length - 1;
-		int m = data.length / 2;
-
-		while (s <= l) {
-			if (e == data[m]) {
-				// found element break;
-				p = m;
-				break;
-			} else if (e > data[m]) {
-				// element is in a right block, so move s and find new middle
-				// element
-				s = m + 1;
-			} else {
-				l = m - 1;
-			}
-
-			m = (s + l) / 2;
-
+	//binary search
+	private int bs(int[] data, int e, int start, int end){
+		
+		if(start > end){
+			return -1;
 		}
-
-		return p;
+		int mid = (start+end)/2;
+		if(e == data[mid]){
+			return mid;
+		}else if (data[mid] < e){
+			return bs(data, e, mid+1, end );			
+		}else{
+			return bs(data, e, start, mid-1);
+		}
+		
 	}
-	
-
 	
 	private int msbs(int[] data, int e) {
 		int p = -1;
@@ -206,7 +286,29 @@ public class Sort2 {
 
 		return p;
 	}
-
+		
+	//rotate-array search
+	//A={15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14}
+	public int searchRotatedArray(int[] data, int e, int start, int end){
+		return -1;
+	}
+	
+	public String searchElementInTwoDimensionalSortedArray(int[][] data, int d){
+		int i = 0;
+		int j = data[0].length -1;
+		
+		while(i < data.length && j >= 0){
+			if(data[i][j] == d){
+				return i+","+j;
+			}else if(data[i][j] > d){
+				j--;
+			}else{
+				i++;
+			}
+		}
+		return "-1";
+	}
+	//sparce space search
 	private int bsss(String[] data, String x, int start, int last) {
 		int p = -1;
 
@@ -237,29 +339,150 @@ public class Sort2 {
 
 		return p;
 	}
-
-	// {23,27,29,31,37,1,4,11,14,15,17,19}
-
-	/*
-	 * private int searchRotatedSortedArray(int[] A, int s, int l, int elem){
-	 * 
-	 * int mid = (s+l)/2;
-	 * 
-	 * 
-	 * while(s < l){ if(A[mid] == elem){ return mid; }else if(A[mid] > elem ){
-	 * return (A[s] <= A[mid] && A[s] < elem) ? searchRotatedSortedArray(A,
-	 * mid+1, l, elem): searchRotatedSortedArray(A, mid-1, l, elem); }else
-	 * return ( A[mid] <= A[l] && A[l] < elem )? searchRotatedSortedArray(A, s,
-	 * mid-1, elem): searchRotatedSortedArray(A, mid+1, l, elem); }
-	 * 
-	 * return -1;
-	 * 
-	 * }
-	 */
-
-	// {23,27,29,31,37,1,4,11,14,15,17,19}
-	// int[] a1 = {23,27,29,31,37,1,4,11,14,15,17,19};
-	// int[] a1 = {23,27,29,31,37,9,11,14,15,17};
+	
+	//sparse search recursive
+	private int ss(String[] data, String s, int start, int end){
+		if(start > end){
+			return -1;
+		}
+		
+		while(end >= start && data[end].equals("")){
+			end--;			
+		}
+		int mid =  (start+end)/2;
+		
+			
+		boolean foundMid = true;
+		if(data[mid].equals("")){
+			foundMid = false;
+			
+			while(mid < end && !foundMid){
+				mid++;
+				if(!data[mid].equals("")){
+					foundMid = true;
+					break;
+				}
+			}
+			while(mid > 0 && !foundMid){
+					mid--;
+					if(!data[mid].equals("")){
+						foundMid = true;
+						break;
+					}
+			}
+			
+		}
+		if(!foundMid){
+			return -1;
+		}
+		
+		if(data[mid].equals(s)){
+			return mid;
+		}else if(s.compareTo(data[mid]) < 0){
+			return ss(data, s, start, mid-1);			
+		}else{
+			return ss(data, s, mid+1, end);
+		}
+	}
+	
+	//["at", "", "", "", "ball", "", "", "car", "", "", "dad", "", ""]
+	
+	private int sparseSearch(String[] a, String str, int s, int l){
+		while(s <= l){
+			while (a[l].equals("")){
+				l--;
+			}
+			if(l < s){
+				return -1;
+			}
+			 
+			int m = (s+l)/2;
+			while(a[m].equals("")){
+				m++;
+			}
+			if(a[m].equals(str)){
+				return m;
+			}else if(a[m].compareTo(str) < 0){
+				s = m+1;
+			}else{
+				l = m-1;
+			}
+		}
+		return -1;
+	}
+	
+	//2 sorted array merge, one array is big engough to hold other	//A={1,2,7,12,14,-1,-1,-1,-1}  B={4,5,8,16}
+	//A={1,2,7,12,14,7,8,12,16}
+	
+	public void mergeSortedArray(int[] a, int[] b, int trueLength){
+		int ai = trueLength - 1; //ai = i = j 
+		int bi = b.length -1; //bi = j = i
+		int i = a.length -1; //i =k = k
+		
+		while(ai >=0 && bi >=0 ){
+			if(a[ai] > b[bi]){
+				a[i--] = a[ai--];
+			}else{
+				a[i--] = b[bi--];
+			}
+		}
+		while(bi >= 0){
+			a[i--] = b[bi--];
+		}
+	}
+	
+	
+	// {23,27,29,31,37,1,4,11,14,15,17,19}	
+	//zigzag assign a>b<c>d {1,2,3,4,5,6,7,8} = {2 > 1 < 4 > 3 < 5 > 4 < 7 > 6 < 8}
+	
+	private void zigzag(int data[]){
+		if (data.length < 2){
+			return;
+		}
+		boolean s = true; //if true means item should be greater than next
+		for(int i=0; i< data.length - 1; i++){
+			if(i % 2 == 0){
+				s = true;
+			}else{
+				s = false;
+			}
+			if(s){
+				if(! (data[i] > data[i+1]) ){
+					int temp = data[i+1];
+					data[i+1] = data[i];
+					data[i] = temp;					
+				}
+			}else{
+				if(! (data[i] < data[i+1]) ){
+					int temp = data[i+1];
+					data[i+1] = data[i];
+					data[i] = temp;					
+				}
+			}
+			
+		}
+	}
+	
+	private void zigzag1(int[] a){
+		boolean flag = true;
+		for(int i =0; i < a.length -1; i++){
+			if(flag){
+				if(a[i] > a[i+1]){
+					int temp = a[i];
+					a[i] = a[i+1];
+					a[i+1] = temp;
+				}
+			}else{
+				if(a[i] < a[i+1]){
+					int temp = a[i];
+					a[i] = a[i+1];
+					a[i+1] = temp;
+				}
+			}
+			flag = !flag;
+		}
+	}
+	
 	static int[] a1 = { 11, 14, 15, 17, 23, 27, 29, 31, 37, 9 };
 
 	private int pivotedSearch(int[] A, int s, int h, int elem) {
@@ -312,46 +535,9 @@ public class Sort2 {
 		} else {
 			return binarySearch(A, m + 1, h, elem);
 		}
-
 	}
 	
-	private int bsbs(int[] data, int e, int s, int l){
-		
-		if(l < s){
-			return -1;
-		}
-		
-		int mid = (l+s)/2;
-				
-		if(data[mid] == e){
-			return mid;
-		}else if(e < data[mid]){
-			return bsbs(data,e,s,mid-1);			
-		}else{
-			return bsbs(data,e,mid+1,l);
-		}
 	
-		
-	}
-	
-	private int bsrw(int[] A, int s, int h, int e){
-		if( h < s){
-			return -1;
-		}
-		
-		int mid = (h+s)/2;
-		if(A[mid] == e){
-			return mid;
-		}else if(A[mid] <= e){
-			bsrw(A,s,mid-1,e);
-		}else{
-			bsrw(A, mid+1, h, e);
-		}
-		
-		return -1;
-		
-	}
-
 	// odd even sort
 	Integer[] oe = { 1, 2, 3, 4, 5, 6, 7, 8 };
 
@@ -393,97 +579,63 @@ public class Sort2 {
 			r.push(tmp);
 		}
 		return r;
-	}
+	}	
 	
-	
-	private static int rotatedaarray(int[] a, int e){
+	private void ss(){
+		Stack<Integer> s1 = new Stack<>(); 
+		Stack<Integer> s2 = new Stack<>();
+		s1.push(9);
+		s1.push(8);
+		s1.push(2);
+		s1.push(3);
+		s1.push(4);
 		
-		int s = 0;
-		int l = a.length - 1;
-		
-		
-		while(s <= l){
-			int m = (s+l)/2;
-			if(a[m] == e){
-				return m;
-			}else if(a[s] <= a[m]){
-				if(a[s] <= e && e < a[m]){
-					l = m-1;
-				}else{
-					s = m+1;
+		while(!s1.isEmpty()){
+			int i = s1.pop();			
+			while(!s2.isEmpty() && s2.peek() > i){
+					s1.push(s2.pop());
 				}
-			}else{
-				if(a[m] < e && e <= a[l]){
-					s = m + 1;
-				}else{
-					l = m - 1;
-				}
-			}
-			
+				s2.push(i);
+				
 		}
-		return -1;
 		
+		System.out.println(s2);
 	}
 	
-	static int rotated_binary_search(int A[], int N, int key) {
-		  int L = 0;
-		  int R = N - 1;
-		 
-		  while (L <= R) {
-		    // Avoid overflow, same as M=(L+R)/2
-		    int M = L + ((R - L) / 2);
-		    if (A[M] == key) return M;
-		 
-		    // the bottom half is sorted
-		    if (A[L] <= A[M]) {
-		      if (A[L] <= key && key < A[M]) 
-		        R = M - 1;
-		      else
-		        L = M + 1;
-		    }
-		    // the upper half is sorted
-		    else {
-		      if (A[M] < key && key <= A[R])
-		        L = M + 1;
-		      else 
-		        R = M - 1;
-		    }
-		  }
-		  return -1;
-	}
 	
-	static int A[] = {4, 5, 6, 7, 0, 1, 2};
 	
-	public int fr(int e){
-		int s = 0;
-		int l = A.length;
-		
-		while(s < l ){
-			int m = (s+l)/2;
-			
+	
+	
+	static int A[] = {4, 5, 6, 7, 0, 1, 2};	
+	
+	//{15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14}
+	
+	public int rotatedArray(int[] A, int e){
+		int s  = 0;
+		int u = A.length;
+		while (u > s){
+			int m = (s+u)/2;
 			if(A[m] == e){
-				return e;
-			}
-			
-			if(A[s] < A[m]){
-				if(A[s] <= e && e < A[m]){
-					l = m-1;
+				return m;
+			}else if(A[m] >= A[s]){
+				if(e > A[m]){
+					s = m+1;					
+				}else if(e > A[s]){
+					u = m-1;
 				}else{
 					s = m+1;
 				}
+			}else if(e < A[m]){
+				u = m-1;
+			}else if(e < A[s]){
+				s = m+1;
 			}else{
-				if(A[m] < e && e <= A[l]){
-					s = m+1;
-				}else{
-					l = m-1;
-				}
+				u = m-1;
 			}
 		}
 		
 		return -1;
 	}
-	
-
 }
 
 class MyOddEvenComparator implements Comparator<Integer> {

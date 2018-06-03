@@ -7,15 +7,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.StringTokenizer;
 import java.util.concurrent.DelayQueue;
 
 import javax.swing.tree.TreeNode;
 
 import org.apache.commons.lang3.ArrayUtils;
+
+import com.sun.corba.se.spi.ior.TaggedProfileTemplate;
 
 /*
  *                                           100
@@ -23,6 +27,7 @@ import org.apache.commons.lang3.ArrayUtils;
  *               		25			75				125					175
  *               								110
  */
+
 
 public class BTree2<T extends Comparable<T>> {
 	
@@ -64,6 +69,59 @@ public class BTree2<T extends Comparable<T>> {
 		}
 	}
 	
+	private boolean bfs1(BNode<T> n, T t){
+		if(n == null){
+			return false;
+		}
+		if(n.data == t){
+			return true;
+		}else if(n.data.compareTo(t) > 0){
+			return bfs1(n.left, t);
+		}else if(n.data.compareTo(t) < 0){
+			return bfs1(n.right, t);
+		}else{
+			return false;
+		}
+	}
+	
+	public boolean bfs(BNode<T> node, T t){		
+		if(node == null){
+			return false;
+		}
+		Queue<BNode<T>> q = new ArrayDeque<BNode<T>>();
+		q.add(node);
+		
+		while(!q.isEmpty()){
+			BNode<T> n = q.poll();
+			if(n.getData().equals(t)){
+				return true;				
+			}else{
+				if(n.left != null) q.add(n.getLeft());
+				if(n.right != null) q.add(n.getRight());
+			}
+		}		
+		return false;		
+	}
+	
+	public boolean dfs(BNode<T> n, T t){
+		if(n == null){
+			return false;			
+		}
+		Stack<BNode<T>> s = new Stack<BNode<T>>();
+		s.push(n);
+		
+		while(!s.isEmpty()){
+			BNode<T> temp = s.pop();
+			if(temp.data == t){
+				return true;
+			}else{
+				s.push(temp.right);
+				s.push(temp.left);
+			}
+		}
+		return false;
+	}
+	
 	// build tree from postorder post order inorder in order  
 	private BNode<T> buildTree(List<T> ioList, List<T> poList, int inOrderLower, int inOrderUpper,int postOrderLower, int postOrderUpper){
 		
@@ -91,18 +149,51 @@ public class BTree2<T extends Comparable<T>> {
 		
 	}
 	
-	
-	
 	List<T> io = new ArrayList<T>();
 	
 	public void inOrderTraversal(BNode<T> node){
 		if(node != null){
 			inOrderTraversal(node.left);
 			io.add(node.getData());
-			node.show();			
+			//node.show();			
 			inOrderTraversal(node.right);
 		}
 	}
+	
+	public void inOrderTraversalTraversal(){ //*
+		
+		if (root == null) {
+            return;
+        }
+        
+        //keep the nodes in the path that are waiting to be visited
+        Stack<BNode<T>> stack = new Stack<BNode<T>>();
+        BNode<T> node = root;
+         
+        //first node to be visited will be the left one
+        while (node != null) {
+            stack.push(node);
+            node = node.left;
+        }
+         
+        // traverse the tree
+        while (stack.size() > 0) {
+           
+            // visit the top node
+            node = stack.pop();
+            System.out.print(node.data + " ");
+            if (node.right != null) {
+                node = node.right;
+                 
+                // the next node to be visited is the leftmost
+                while (node != null) {
+                    stack.push(node);
+                    node = node.left;
+                }
+            }
+        }
+	}
+	
 	
 	List<T> po = new ArrayList<T>();
 	
@@ -111,7 +202,7 @@ public class BTree2<T extends Comparable<T>> {
 			return;
 		}
 		po.add(node.getData());
-		node.show();
+		//node.show();
 		preOrderTraversal(node.left);
 		preOrderTraversal(node.right);
 		
@@ -147,6 +238,7 @@ public class BTree2<T extends Comparable<T>> {
 		return 1 + Math.max(findHeight(node.left), findHeight(node.right));		
 	}
 	
+		
 	public boolean treeContains(T t){
 		boolean contains = false;
 		if(root != null){
@@ -167,40 +259,6 @@ public class BTree2<T extends Comparable<T>> {
 			}
 		}
 		return contains;
-	}
-	
-	
-	private BNode<T> mostCommonAncestor(T t1, T t2){
-		BNode<T> runner = null;
-		BNode<T> mca = null;
-		if (root == null){
-			return null;
-		}else{
-			runner = root;
-		}
-		
-		while(runner != null){
-			if(t1.compareTo(runner.getData()) < 0 && t2.compareTo(runner.getData()) < 0){
-				//both are less so lets go to left
-				if(runner.left != null && (runner.left.getData().equals(t1) || runner.left.getData().equals(t2))){
-					mca = runner;
-					break;
-				}
-				runner = runner.left;
-			}else if(t1.compareTo(runner.getData()) >= 0 && t2.compareTo(runner.getData()) >= 0 ){
-				//both values are greater so go to right
-				if(runner.right != null && (runner.right.getData().equals(t1) || runner.right.getData().equals(t2))){
-					mca = runner;
-					break;
-				}
-				runner = runner.right;
-				
-			}else{
-				mca = runner;
-				break;
-			}
-		}
-		return mca;	
 	}
 	
 	private int traverse(BNode<T> node, int count, List<? super BNode<T>> list){
@@ -268,6 +326,7 @@ public class BTree2<T extends Comparable<T>> {
 		return ll;
 	}
 	
+	
 	//https://gist.github.com/bittib/5620951
 	public void serialize(BNode<T> node){
 		StringBuilder sb = new StringBuilder();
@@ -288,8 +347,7 @@ public class BTree2<T extends Comparable<T>> {
 			serialize(node.left, sb);
 			serialize(node.right, sb);
 		}
-	}
-	
+	}	
 	int index = 0;
 	public BNode<Integer> deserialize(String[] tokens){
 		if(index >= tokens.length){
@@ -322,6 +380,8 @@ public class BTree2<T extends Comparable<T>> {
 		build(tree, na, start, mid-1);
 		build(tree, na, mid+1, length);
 	}
+	
+	
 	
 	public boolean mirrorImage(BNode<T> n1, BNode<T> n2){		
 		if(n1 == null && n2 == null){
@@ -360,6 +420,7 @@ public class BTree2<T extends Comparable<T>> {
 		return false;
 	}
 	
+	
 	private BNode<T> mostCommonAncestorOfBinaryTreeNotBST(BNode<T> root, BNode<T> n1, BNode<T> n2){
 		if(covers(root.left, n1) && covers(root.left, n2)){
 			mostCommonAncestorOfBinaryTreeNotBST(root.left, n1, n2);			
@@ -379,31 +440,6 @@ public class BTree2<T extends Comparable<T>> {
 		
 		return covers(root.left, n) || covers(root.right, n);
 		
-	}
-	
-	private BNode<T> ios(BNode<T> node){
-		if(node == null){
-			return null;
-		}
-		if(node.right != null){
-			return getLeft(node.right);
-		}else{
-			BNode<T> p = node.parent;
-			BNode<T> t = node;
-			while(p != null && p.left.getData() == t.getData()){
-				p = p.parent;
-				t = p;
-			}
-		}
-		return null;
-	}
-	
-	private BNode<T> getLeft(BNode<T> node){
-		BNode	<T> left = null;
-		while(node != null){
-			left = node.left;			
-		}
-		return left;
 	}
 	
 	//http://www.youtube.com/watch?v=jSZ4e3cmh2A
@@ -487,10 +523,178 @@ public class BTree2<T extends Comparable<T>> {
 		}
 	}
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	public void generateLL(HashMap<Integer, LinkedList<T>> lmap,BNode<T> node, int level){
+		LinkedList<T> ll =  lmap.get(level);
+		if(ll == null){
+			ll = new LinkedList<T>();
+			ll.add(node.getData());
+			lmap.put(level, ll);
+		}else{
+			ll.add(node.getData());
+		}
+		
+		if(node.left != null){		
+			generateLL(lmap, node.getLeft(), level+1);
+		}
+		if(node.getRight() != null){
+			generateLL(lmap, node.getRight(), level+1);
+		}	
+	}
 	
+	T nodeData;
+	public boolean isBalancedBinaryTree(BNode<T> n){
+		//Approach 1 : in order traversal in array should be always sorter.
+		//Approach 2 : No need of extra array maintain a number
+		//Approach 3 : find the max a min height difference should not be greater than 1
+		if(n == null){
+			return true;
+		}
+		if(! isBalancedBinaryTree(n.getLeft()) ){
+			return false;
+		}
+		nodeData = n.getData();
+		
+		if(nodeData != null && nodeData.compareTo(n.getData()) < 0){
+			return false;
+		}
+		
+		if(! isBalancedBinaryTree(n.getRight()) ){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public BNode<T> inOrderSuccessor1(BNode<T> node){
+		if(node.right != null){
+			//return leftMost(node.right);
+			return null;
+		}else{
+			BNode<T> n = node;
+			BNode<T> p = node.parent;
+			while(p != null && p.left != n){
+				n = p;
+				p = p.parent;
+			}
+			return p;
+		}
+	}
+	
+	public BNode<T> commonAncestor(BNode<T> node, BNode<T> p, BNode<T> q){
+		if(cover(node.left,p) && cover(node.left, q)) {
+			return commonAncestor(node.left, p, q);
+		}else if(cover(node.right,p) && cover(node.right, q)){
+			return commonAncestor(node.right, p, q);			
+		}else{
+			return node;
+		}		
+	}
+	
+	public boolean cover(BNode<T> node, BNode<T> n){
+		if(node == null){
+			return false;
+		}
+		if(node == n){
+			return true;
+		}
+		return cover(node.left, n) || cover(node.right, n);
+	}
+	
+	public boolean T1ContainsT2(BNode<T> t1, BNode<T> t2){
+		if(t2 == null){
+			return false;
+		}		
+		if(t1.data.equals(t2.data)){
+			return matchTree(t1, t2);
+		}else {
+			return T1ContainsT2(t1.left, t2) || T1ContainsT2(t1.right, t2);			
+		}
+	}
+	
+	public boolean matchTree1(BNode<T> t1, BNode<T> t2){
+		if(t1 == null && t2 == null){
+			return true;
+		}else if(t1 == null || t2 == null){
+			return false;
+		}else if(t1.getData().equals(t2.getData())){
+			return true;
+		}else{
+			return matchTree(t1.left, t2.left) && matchTree(t1.right, t2.right);
+		}
+	}
+	
+	List<BNode<Integer>> l = new  ArrayList<>();
+	
+	private void binaryTreeToHeap(BNode<Integer> node){
+		traverse1(node);
+		System.out.println(l);
+		l.sort((n1, n2) -> n2.compareTo(n1));
+		System.out.println(l);
+		
+		for(int i=0; i < l.size(); i++){
+			if((2*i+1) < l.size()){
+				l.get(i).left = l.get((2*i)+1);
+			}else{
+				l.get(i).left = null;
+			}
+			if((2*i+2) < l.size()){
+				l.get(i).right = l.get((2*i)+2);
+			}else{
+				l.get(i).right = null;
+			}
+		}
+		BTree2<Integer> t = new BTree2<Integer>();
+		t.root = l.get(0);
+	}
+	
+	public void traverse1(BNode<Integer> node){
+		if(node == null){
+			return;
+		}
+		l.add(node);
+		traverse1(node.left);
+		traverse1(node.right);
+		
+	}
+	
+	
+	
+	public BNode<Integer> build(int[] a, int s, int l){		
+		BNode<Integer> n = null;
+		if(s < l){		
+			 
+			int m = (s+l)/2;
+			n = new BNode(a[m]);			
+			n.left = build(a,s, m-1);
+			n.right = build(a,m+1, l);
+			return n;
+		}else{
+			return null;
+		}
+	}
+	
+	public void printLeafNode(BNode<T> n){
+		if(n == null){
+			return;
+		}
+		if(n.left == null && n.right == null){
+			System.out.println(n.data);
+		}else{
+			printLeafNode(n.left);
+			printLeafNode(n.right);
+		}
+		
+	}
 	
 	
 	public static void main(String[] args){
+		
+		System.out.println(21/10);
+		System.out.println(5/10);
+		System.out.println(21%10);
+		System.out.println(5%10);
+		
 		BTree2<Integer> tree = new BTree2<Integer>();
 		tree.treeInsert(100);
 		tree.treeInsert(50);
@@ -500,10 +704,42 @@ public class BTree2<T extends Comparable<T>> {
 		tree.treeInsert(125);
 		tree.treeInsert(175);
 		tree.treeInsert(110);
+		tree.treeInsert(500);
+		tree.treeInsert(700);
 		
-		tree.traverse(tree.root);
-		System.out.println(BTree2.nl);
+		tree.binaryTreeToHeap(tree.root);
 		
+		/*
+		 * Generate LinkedList 
+		HashMap<Integer, LinkedList<Integer>> lmap = new HashMap<Integer, LinkedList<Integer>>();
+		tree.generateLL(lmap, tree.root, 0);
+		for(int i : lmap.keySet()){
+			System.out.print(i + "-> ");
+			for(int k : lmap.get(i)){
+				System.out.print(k + " ");
+			}
+			System.out.println();
+		}
+		*/
+		
+		//check BST
+		//System.out.println(tree.isBalancedBinaryTree(tree.root));
+		//System.out.println(1/26);
+		System.out.println(tree.bfs1(tree.root, 75));
+		
+		//tree.traverse(tree.root);
+		//System.out.println(BTree2.nl);
+		
+		//tree.inOrderTraversal(tree.root);
+		//System.out.println(tree.io);
+		//tree.io.clear();
+		
+		//tree.inOrderTraversalTraversal();
+		//System.out.println(tree.io);
+		
+		
+		//tree.preOrderTraversal(tree.root);
+		//System.out.println(tree.po);
 		
 		
 		/*tree.preOrderTraversal(tree.root);
@@ -519,7 +755,7 @@ public class BTree2<T extends Comparable<T>> {
 		
 		
 		//tree.getLL(tree.root);
-		tree.serialize(tree.root);
+		//tree.serialize(tree.root);
 		
 		//System.out.println("tree Height is :"+tree.findHeight(tree.root));
 		/*System.out.println("tree contains data 100 :"+tree.treeContains(100));
@@ -531,8 +767,9 @@ public class BTree2<T extends Comparable<T>> {
 		
 		//BNode[] aBNode = new BNode[tree.traverse(tree.root, 0, null)];
 		
-		List<BNode<Integer>> nodeList = new ArrayList<BNode<Integer>>();
+		*/
 		
+		/*List<BNode<Integer>> nodeList = new ArrayList<BNode<Integer>>();		
 		tree.traverse(tree.root, 0, nodeList);
 		Collections.sort(nodeList,new MyBTreeNodeComparator());
 		BNode[] na = new BNode[nodeList.size()];
@@ -542,16 +779,26 @@ public class BTree2<T extends Comparable<T>> {
 		BTree2<Integer> t2 = new BTree2<Integer>();
 		tree.build(t2, na, 0, na.length-1);
 		
-		t2.preOrderTraversal(t2.root);
+		t2.preOrderTraversal(t2.root);*/
 		
 		
-		
+		/*
 		//System.out.println("Nodes :"+);
 		
 		/*System.out.println(ArrayUtils.toString(aBNode));
 		Arrays.sort(aBNode, new MyBTreeNodeComparator());
 		
 		System.out.println(ArrayUtils.toString(aBNode));*/
+		
+		int[] a = {100,50,150,25,75,125,175,110};
+		Arrays.sort(a);
+		
+		BNode<Integer> n1 = tree.build(a,0,a.length);
+		StringBuilder s = new StringBuilder();
+		tree.serialize(n1, s);
+		System.out.println(s);
+		
+		
 	}
 	
 	class Test{
@@ -568,7 +815,8 @@ public class BTree2<T extends Comparable<T>> {
 	}
 	
 	
-}
+}	
+	
 
 class BNode<T extends Comparable<? super T> > implements Comparable<BNode<? extends T>>{
 	T data;
@@ -633,69 +881,4 @@ class MyBTreeNodeComparator<T extends Comparable<T>> implements Comparator<T>{
 
 
 
-class B2Node<T extends Comparable<? super T>>{
-	B2Node<T> left;
-	B2Node<T> right;
-	T t;
-	
-	public B2Node<T> getLeft() {
-		return left;
-	}
-	public void setLeft(B2Node<T> left) {
-		this.left = left;
-	}
-	public B2Node<T> getRight() {
-		return right;
-	}
-	public void setRight(B2Node<T> right) {
-		this.right = right;
-	}
-	public T getT() {
-		return t;
-	}
-	public void setT(T t) {
-		this.t = t;
-	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((left == null) ? 0 : left.hashCode());
-		result = prime * result + ((right == null) ? 0 : right.hashCode());
-		result = prime * result + ((t == null) ? 0 : t.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		B2Node other = (B2Node) obj;
-		if (left == null) {
-			if (other.left != null)
-				return false;
-		} else if (!left.equals(other.left))
-			return false;
-		if (right == null) {
-			if (other.right != null)
-				return false;
-		} else if (!right.equals(other.right))
-			return false;
-		if (t == null) {
-			if (other.t != null)
-				return false;
-		} else if (!t.equals(other.t))
-			return false;
-		return true;
-	}
-	
-	
-	
-	
-	
-	
-}
 
