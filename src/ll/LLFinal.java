@@ -1,9 +1,9 @@
 package ll;
 
 public class LLFinal<T> {
-	LNode<T> root;
-	LNode<T> last;
-	int size = 0;
+	public LNode<T> root;
+	public LNode<T> last;
+	public int size = 0;
 	
 	public LNode<T> add(T t){
 		LNode<T> n = new LNode<>(t);
@@ -109,6 +109,7 @@ public class LLFinal<T> {
 		ml.add(n);
 		ml.printCyclic(ml.root);
 	}
-	
+
+
 	
 }

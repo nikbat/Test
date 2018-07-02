@@ -649,7 +649,7 @@ public class StringArray1 {
 		//sa.markRowOrColumnToZero(data);
 		//System.out.println(ArrayUtils.toString(data));
 		
-		//System.out.println(sa.solveMaze(paths, 0, 0, 1, 2));
+		System.out.println(sa.solveMaze(paths, 0, 0, 1, 2));
 		//System.out.println(sa.solveMaze(paths, 4, 4, 3, 4));
 		
 		//System.out.println(sa.solveMaze1(paths, 0, 0, 1, 3,0,0,true,true,true,true));

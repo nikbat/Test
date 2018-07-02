@@ -11,17 +11,17 @@ import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import com.coremetrics.rb.query.util.SimpleBloomFilter;
-import com.google.common.hash.BloomFilter;
+//import com.coremetrics.rb.query.util.SimpleBloomFilter;
+//import com.google.common.hash.BloomFilter;
 
 
 public class TestGuava {
 
 	public static void main(String[] args) throws Exception{
-		new TestGuava().testBoom();
+		//new TestGuava().testBoom();
 	}
 	
-	private void testBoom() throws Exception{
+	/*private void testBoom() throws Exception{
 		String cookieId = "";
 		int count = 0;
 		SimpleBloomFilter<String> bl = new SimpleBloomFilter<String>(100000, 5);
@@ -58,9 +58,9 @@ public class TestGuava {
 			
 		} finally {
 			if (dos != null)
-				try { dos.close(); } catch (IOException e) { /* ignore */ }
+				try { dos.close(); } catch (IOException e) { // ignore // }
 			if (oos != null)
-				try { oos.close(); } catch (IOException e) { /* ignore */ }
+				try { oos.close(); } catch (IOException e) { // ignore // }
 		}
 		
 		SimpleBloomFilter<String> filter = null;
@@ -77,9 +77,9 @@ public class TestGuava {
 			
 		} finally {
 			if (dos != null)
-				try { dos.close(); } catch (IOException e) { /* ignore */ }
+				try { dos.close(); } catch (IOException e) { // ignore // }
 			if (oos != null)
-				try { oos.close(); } catch (IOException e) { /* ignore */ }
+				try { oos.close(); } catch (IOException e) { // ignore // }
 		}
 		
 		
@@ -92,10 +92,10 @@ public class TestGuava {
 		System.out.println(bl.check("36311392928754172137986"));
 		
 		
+
 		
 		
 		
-		
-	}
+	}*/
 
 }

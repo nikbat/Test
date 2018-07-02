@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.Arrays;
 
 public class MyInteger {
@@ -8,8 +10,45 @@ public class MyInteger {
 		// combine(0);
 		// printFib();
 		System.out.println(reverseString(s));
+		//primeFactor(18);
+		factor(30);
+		//printParenthesis(new char[8], 4, 0, 0, 0);
 
 	}
+
+	public static void printParenthesis(char[] a, int n, int p, int open, int close){
+
+		if(close == n){
+
+			for(int j = 0 ; j < a.length; j++){
+				System.out.print(a[j]);
+			}
+			System.out.println();
+
+		}else{
+			if(close < open){
+				a[p] = '}';
+				printParenthesis(a,n,p+1,open, close+1);
+			}
+
+			if(open < n){
+				a[p] = '{';
+				printParenthesis(a,n,p+1,open+1, close);
+			}
+
+		}
+	}
+
+	/*static final int[][] paths = {
+      {0,0,1,0,1},
+      {0,0,0,0,0},
+      {0,1,1,1,0},
+      {0,1,1,0,0},
+      {0,1,1,0,0}
+
+  };*/
+
+
 
 	public static double findSqrt(double number) {
 		if (number < 0) {
@@ -135,7 +174,8 @@ public class MyInteger {
 			return false;
 	}
 	
-	/*	1
+	/*
+	1
 	2 3
 	4 5 6
 	7 8 9 10
@@ -223,5 +263,39 @@ public class MyInteger {
 
 		return reverseString(s.substring(1)) + s.charAt(0);
 	}
+
+	public static void primeFactor(int n){
+
+		if(n == 0 || n == 1 ){
+			System.out.println(n);
+		}
+
+		int copyNumber = n;
+		for(int i = 2; i <= copyNumber; i++){
+			if(copyNumber % i == 0){
+				System.out.print(i+",");
+				copyNumber = copyNumber / i;
+				i = i-1;
+			}
+		}
+	}
+
+	public static void factor(int n){
+
+		if(n == 0 || n == 1 ){
+			System.out.println(n);
+		}
+
+		int copyNumber = n;
+		for(int i = 2; i <= copyNumber; i++){
+			if(copyNumber % i == 0){
+				System.out.print(i+",");
+				//copyNumber = copyNumber / i;
+				//i = i-1;
+			}
+		}
+	}
+
+
 
 }

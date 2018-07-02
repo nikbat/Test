@@ -66,6 +66,8 @@ public class Sort2 {
 		//int[] data = {1,2,3,4,5,6,7,8};
 		//so.zigzag(data);
 		//System.out.println(ArrayUtils.toString(data));
+
+
 		
 		int[] data1 = {1,2,3,4,5,6,7,8};
 		int[] data2 = {4, 3, 7, 8, 6, 2, 1};

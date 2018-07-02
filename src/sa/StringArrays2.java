@@ -32,7 +32,7 @@ public class StringArrays2 {
 		//multTables(5);
 		//System.out.println(sa.minimumIntegerToMultiplyToGetSum(37));
 		//sa.mitgs(21);
-		//sa.printDigonal();
+		sa.printDigonal();
 		sa.pd();
 		//sa.printDiagonal();
 		
@@ -55,7 +55,7 @@ public class StringArrays2 {
 
 	}
 	
-	public void pd(int N){		
+	public void rotateArray(int N){
 		int[] a = {1,2,3,4,5,6,7,8,9};
 		for(int i = 0; i < a.length; i++){
 			int t = a[(i+N) % N]; 
@@ -253,7 +253,7 @@ public class StringArrays2 {
 	 * layer (outermost edges). We rotate the edges by doing a four-way swap
 	 * first on the corners, then on the element clockwise from the edges, then
 	 * on the element three steps away. Once the exterior elements are rotated,
-	 * we then rotate the interior region’s edges.
+	 * we then rotate the interior regionï¿½s edges.
 	 */
 
 	public static void rotate(int[][] matrix, int n) {

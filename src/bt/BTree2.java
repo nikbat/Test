@@ -1,18 +1,7 @@
 package bt;
 
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.concurrent.DelayQueue;
 
 import javax.swing.tree.TreeNode;
@@ -22,7 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.sun.corba.se.spi.ior.TaggedProfileTemplate;
 
 /*
- *                                           100
+ *                                   100
  *                            50							150
  *               		25			75				125					175
  *               								110
@@ -32,6 +21,8 @@ import com.sun.corba.se.spi.ior.TaggedProfileTemplate;
 public class BTree2<T extends Comparable<T>> {
 	
 	BNode<T> root;
+	BNode<T> result;
+	int level;
 	
 	public BTree2() {
 		super();		
@@ -68,7 +59,7 @@ public class BTree2<T extends Comparable<T>> {
 			}
 		}
 	}
-	
+
 	private boolean bfs1(BNode<T> n, T t){
 		if(n == null){
 			return false;
@@ -83,7 +74,7 @@ public class BTree2<T extends Comparable<T>> {
 			return false;
 		}
 	}
-	
+
 	public boolean bfs(BNode<T> node, T t){		
 		if(node == null){
 			return false;
@@ -121,6 +112,8 @@ public class BTree2<T extends Comparable<T>> {
 		}
 		return false;
 	}
+
+
 	
 	// build tree from postorder post order inorder in order  
 	private BNode<T> buildTree(List<T> ioList, List<T> poList, int inOrderLower, int inOrderUpper,int postOrderLower, int postOrderUpper){
@@ -155,7 +148,7 @@ public class BTree2<T extends Comparable<T>> {
 		if(node != null){
 			inOrderTraversal(node.left);
 			io.add(node.getData());
-			//node.show();			
+			node.show();
 			inOrderTraversal(node.right);
 		}
 	}
@@ -193,6 +186,7 @@ public class BTree2<T extends Comparable<T>> {
             }
         }
 	}
+
 	
 	
 	List<T> po = new ArrayList<T>();
@@ -202,7 +196,7 @@ public class BTree2<T extends Comparable<T>> {
 			return;
 		}
 		po.add(node.getData());
-		//node.show();
+		node.show();
 		preOrderTraversal(node.left);
 		preOrderTraversal(node.right);
 		
@@ -381,8 +375,6 @@ public class BTree2<T extends Comparable<T>> {
 		build(tree, na, mid+1, length);
 	}
 	
-	
-	
 	public boolean mirrorImage(BNode<T> n1, BNode<T> n2){		
 		if(n1 == null && n2 == null){
 			return true;
@@ -394,6 +386,7 @@ public class BTree2<T extends Comparable<T>> {
 			return false;
 		}
 	}
+
 	
 	//2 large binary trees check if T1 is a subtree of T2
 	public boolean subTree(BNode<T> t1, BNode<T> t2){
@@ -408,8 +401,8 @@ public class BTree2<T extends Comparable<T>> {
 		
 		return false;
 	}
-	
-	public boolean matchTree(BNode<T> n1, BNode<T> n2){
+
+		public boolean matchTree(BNode<T> n1, BNode<T> n2){
 		if(n1 == null && n2 == null){
 			return true;
 		}else if(n1 == null || n2 == null){
@@ -439,8 +432,9 @@ public class BTree2<T extends Comparable<T>> {
 		}
 		
 		return covers(root.left, n) || covers(root.right, n);
-		
 	}
+
+
 	
 	//http://www.youtube.com/watch?v=jSZ4e3cmh2A
 	private BNode<T> inOrderSuccessor(BNode<T> node){		
@@ -459,6 +453,8 @@ public class BTree2<T extends Comparable<T>> {
 			return p;
 		}		
 	}
+
+
 	
 	private BNode<T> preOrderSucc(BNode<T> node) {
 		if (node.left != null)
@@ -686,7 +682,132 @@ public class BTree2<T extends Comparable<T>> {
 		}
 		
 	}
-	
+
+	void printLL(BNode<T> n){
+		if(n == null){
+			return;
+		}
+
+		List<List<BNode<T>>> ll = new ArrayList<>();
+		List<BNode<T>> l = new ArrayList<>();
+		int level = 0;
+		l.add(n);
+		while(!l.isEmpty()){
+			ll.add(l);
+			List<BNode<T>> nodes = ll.get(level);
+			l = new ArrayList<>();
+			level = level + 1;
+
+			for(int i = 0; i < nodes.size(); i++) {
+				BNode<T> c = nodes.get(i);
+
+				if (c.getLeft() != null) {
+					l.add(c.getLeft());
+				}
+				if (c.getRight() != null) {
+					l.add(c.getRight());
+				}
+			}
+
+		}
+		for(int i = 0; i < ll.size(); i++){
+			l = ll.get(i);
+			for(int j = 0; j < l.size(); j++){
+				System.out.print(l.get(j));
+				System.out.print(",");
+			}
+			System.out.println();
+		}
+	}
+
+	//https://www.geeksforgeeks.org/diagonal-traversal-of-binary-tree/
+	void printDiagonal(BNode<Integer> n, int i,  Map<Integer, List<Integer>> data){
+		if(n == null){
+			return;
+		}
+		List<Integer> l = data.get(i);
+		if(l == null){
+			l = new ArrayList<>();
+		}
+		l.add(n.data);
+		data.put(i,l);
+
+
+		printDiagonal(n.left, i+1, data);
+		printDiagonal(n.right, i, data);
+	}
+
+	void printLeaf(BNode<Integer> n){
+		if(n == null){
+			return;
+		}
+
+		if(n.left == null && n.right == null){
+			System.out.println(n.data+",");
+		}
+	}
+
+	//https://www.youtube.com/watch?v=0QOtVxTVj4w
+	//build tree from pre order traversal VERY EASY
+	BNode<Integer> buildTreeFromPreOrderTraversal(int[] a, int s, int l){
+		if(s >= l){
+			return null;
+		}
+
+		int t = a[s];
+
+		int ls = s+1;
+		int ll = -1;
+
+		int rs = l;
+		int rl = l;
+
+		for(int i=s; i < l;  i++){
+			if(a[i] > t){
+				rs = i;
+				ll = i;
+				break;
+			}
+		}
+		BNode<Integer> root = new BNode<>(t);
+		root.left = buildTreeFromPreOrderTraversal(a, ls, ll);
+		root.right = buildTreeFromPreOrderTraversal(a, rs, rl);
+		return root;
+
+	}
+
+
+	void findDeepestLeftNode(BNode<T> n, int currentlevel, boolean isLeft){
+		if(n == null){
+			return;
+		}
+
+		if(isLeft && currentlevel > this.level){
+			this.result = n;
+			this.level = currentlevel;
+		}
+
+		findDeepestLeftNode(n.left,  currentlevel+1, true);
+		findDeepestLeftNode(n.right, currentlevel+1, false);
+	}
+
+	//https://www.geeksforgeeks.org/check-two-nodes-cousins-binary-tree/
+	int findLevelOfNode(BNode<Integer> root, int data, int level){
+		if(root == null){
+			return 0;
+		}
+		else if(root.data == data){
+			return level;
+		}else{
+			 int l = findLevelOfNode(root.left, data, level+1);
+			 if(l!=0){
+			 	return l;
+			 }
+			return findLevelOfNode(root.right, data, level+1);
+		}
+	}
+
+
 	
 	public static void main(String[] args){
 		
@@ -704,10 +825,68 @@ public class BTree2<T extends Comparable<T>> {
 		tree.treeInsert(125);
 		tree.treeInsert(175);
 		tree.treeInsert(110);
-		tree.treeInsert(500);
+
+
+		/*tree.treeInsert(500);
 		tree.treeInsert(700);
-		
-		tree.binaryTreeToHeap(tree.root);
+		tree.treeInsert(45);
+		tree.treeInsert(30);
+		tree.treeInsert(40);*/
+
+		BTree2<Integer> tree1 = new BTree2<Integer>();
+		tree1.treeInsert(100);
+		tree1.treeInsert(50);
+		tree1.treeInsert(150);
+		tree1.treeInsert(25);
+		tree1.treeInsert(75);
+		tree1.treeInsert(125);
+		tree1.treeInsert(175);
+		tree1.treeInsert(110);
+		tree1.treeInsert(500);
+		tree1.treeInsert(700);
+		tree1.treeInsert(45);
+		tree1.treeInsert(30);
+		tree1.treeInsert(40);
+
+
+		System.out.println(tree1.findLevelOfNode(tree1.root, 500, 1));
+		//tree1.findDeepestLeftNode(tree1.root, 0,  false);
+		//System.out.println(tree1.result);
+
+		/*Map<Integer, List<Integer>> data = new HashMap<>();
+		tree.printDiagonal(tree.root, 0, data);
+		for(int i : data.keySet()){
+			List<Integer> l = data.get(i);
+			for(int j : l){
+				System.out.print(j+",");
+			}
+			System.out.println();
+		}
+		System.out.println();*/
+
+
+		int[] pota = {12,9,5,4,7,10,15,13,19,16};
+		BNode<Integer> node = tree.buildTreeFromPreOrderTraversal(pota, 0, pota.length);
+		BTree2<Integer> tree5 = new BTree2<>();
+		tree5.root = node;
+
+		tree.inOrderTraversal(tree1.root);
+		System.out.println();
+
+		tree.preOrderTraversal(tree5.root);
+		System.out.println();
+
+		tree.inOrderTraversal(tree.root);
+		System.out.println();
+		tree.preOrderTraversal(tree.root);
+
+		//tree.serialize(tree.root);
+
+		//This method spoils the tree be carefull
+		//tree.binaryTreeToHeap(tree.root);
+		//System.out.println("#"+  tree.bfs1(tree.root, 110));
+		//tree.printLL(tree.root);
+
 		
 		/*
 		 * Generate LinkedList 
@@ -725,7 +904,8 @@ public class BTree2<T extends Comparable<T>> {
 		//check BST
 		//System.out.println(tree.isBalancedBinaryTree(tree.root));
 		//System.out.println(1/26);
-		System.out.println(tree.bfs1(tree.root, 75));
+		//System.out.println(tree.bfs1(tree.root, 75));
+
 		
 		//tree.traverse(tree.root);
 		//System.out.println(BTree2.nl);
@@ -793,10 +973,11 @@ public class BTree2<T extends Comparable<T>> {
 		int[] a = {100,50,150,25,75,125,175,110};
 		Arrays.sort(a);
 		
-		BNode<Integer> n1 = tree.build(a,0,a.length);
-		StringBuilder s = new StringBuilder();
-		tree.serialize(n1, s);
-		System.out.println(s);
+		//BNode<Integer> n1 = tree.build(a,0,a.length);
+
+		//StringBuilder s = new StringBuilder();
+		//tree.serialize(n1, s);
+		//System.out.println(s);
 		
 		
 	}
