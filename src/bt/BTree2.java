@@ -749,27 +749,28 @@ public class BTree2<T extends Comparable<T>> {
 
 	//https://www.youtube.com/watch?v=0QOtVxTVj4w
 	//build tree from pre order traversal VERY EASY
+	//int[] pota = {12,9,5,4,7,10,15,13,19,16};
 	BNode<Integer> buildTreeFromPreOrderTraversal(int[] a, int s, int l){
 		if(s >= l){
 			return null;
 		}
 
-		int t = a[s];
+		int rootValue = a[s]; // first node is always the root
 
-		int ls = s+1;
-		int ll = -1;
+		int ls = s+1; //start of left, the
+		int ll = -1; // left end
 
 		int rs = l;
-		int rl = l;
+		int rl = l; // right end
 
 		for(int i=s; i < l;  i++){
-			if(a[i] > t){
-				rs = i;
-				ll = i;
+			if(a[i] > rootValue){
+				rs = i; // start of right node
+				ll = i; // left end
 				break;
 			}
 		}
-		BNode<Integer> root = new BNode<>(t);
+		BNode<Integer> root = new BNode<>(rootValue);
 		root.left = buildTreeFromPreOrderTraversal(a, ls, ll);
 		root.right = buildTreeFromPreOrderTraversal(a, rs, rl);
 		return root;
@@ -806,6 +807,137 @@ public class BTree2<T extends Comparable<T>> {
 			return findLevelOfNode(root.right, data, level+1);
 		}
 	}
+
+	boolean checkBST(BNode<Integer> n){
+		if(n == null){
+			return true;
+		}
+		return checkBST(n, Integer.MIN_VALUE, Integer.MAX_VALUE);
+	}
+
+	boolean checkBST(BNode<Integer> n, int min, int max){
+
+		if(n == null){
+			return true;
+		}
+
+		if(n.left.data < min && n.right.data > max){
+			return false;
+		}
+
+		return checkBST(n.left, min, n.data-1) && checkBST(n.left, min+1, max);
+
+	}
+
+	void leftView(BNode<T> root) {
+		leftViewUtil(root,1);
+	}
+
+	int max_level = 0;
+	void leftViewUtil(BNode<T> root, int level) {
+		if (root == null) {
+			return;
+		}
+
+		if(max_level < level) {
+			System.out.print(root + " ");
+			max_level = level;
+		}
+
+		leftViewUtil(root.left, level+1);
+		leftViewUtil(root.right, level+1);
+	}
+
+
+
+	//vertical order Traversal
+	//https://www.youtube.com/watch?v=PQKkr036wRc
+
+	HashMap<Integer,LinkedList<BNode<T>>> horizontalDistanceMap =  new HashMap<>();
+	void verticalOrderTraversal(BNode<T> node){
+		if(node == null){
+			return;
+		}
+
+		Queue<BNode<T>> q = new LinkedList<>();
+		node.hd = 0; // set the root to zero
+		q.add(node);
+		while(!q.isEmpty()) {
+
+			BNode<T> n = q.poll();
+			LinkedList<BNode<T>> nodesAtHorizontalDistance = horizontalDistanceMap.get(n.hd);
+			if (nodesAtHorizontalDistance == null) {
+				nodesAtHorizontalDistance = new LinkedList<>(); //Note: ints important to have Linked List for the boot view
+			}
+			nodesAtHorizontalDistance.add(n);
+			horizontalDistanceMap.put(n.hd, nodesAtHorizontalDistance);
+
+			if(n.left != null) {
+				n.left.hd = n.hd - 1;
+				q.add(n.left);
+			}
+			if(n.right != null) {
+				n.right.hd = n.hd + 1;
+				q.add(n.right);
+			}
+
+
+
+			//verticalOrderTraversal(n.left, horizontalDistance - 1);
+			//verticalOrderTraversal(n.right, horizontalDistance + 1);
+		}
+
+	}
+
+	//Bootom View of a Binary Tree
+	//https://www.youtube.com/watch?v=V7alrvgS5AI
+	void bottomViewOfBinaryTree(BNode<T> n){
+		horizontalDistanceMap =  new HashMap<>();
+		verticalOrderTraversal(n);
+		System.out.println();
+		for(int k : horizontalDistanceMap.keySet()){
+			LinkedList<BNode<T>> nodesAtHorizontalDistance  = horizontalDistanceMap.get(k);
+			System.out.print(nodesAtHorizontalDistance.getLast()+",");
+		}
+	}
+
+	//left view of a Binary Tree using level Order Traversal
+	//https://www.youtube.com/watch?v=eBdKNoW3VJg
+	void leftView1(BNode<T> n){
+		//do a level order traversal here
+	}
+
+	//Diameter for the binary tree
+	//https://www.youtube.com/watch?v=ey7DYc9OANo
+	int findDiameter(BNode<T> n){
+		if(n == null){
+			return 0;
+		}
+
+		int leftHeight = findHeight(n.left);
+		int rightHeight = findHeight(n.right);
+
+		int leftDiameter = findDiameter(n.left);
+		int rightDiameter = findDiameter(n.right);
+
+		//return Math.max(leftHeight+rightHeight+1, Math.max(findDiameter(n.left), findDiameter(n.right)) );
+		return Math.max(leftHeight+rightDiameter+1, Math.max(leftDiameter, rightDiameter));
+
+
+
+	}
+
+	int findMaxHeight(BNode<T> n){
+		if(n == null){
+			return 0;
+		}
+		return 1+Math.max(findMaxHeight(n.left), findMaxHeight(n.right));
+	}
+
+
+
+
+
 
 
 	
@@ -847,6 +979,10 @@ public class BTree2<T extends Comparable<T>> {
 		tree1.treeInsert(45);
 		tree1.treeInsert(30);
 		tree1.treeInsert(40);
+
+		tree1.leftView(tree1.root);
+		tree1.leftView1(tree1.root);
+		tree1.bottomViewOfBinaryTree(tree1.root);
 
 
 		System.out.println(tree1.findLevelOfNode(tree1.root, 500, 1));
@@ -1004,6 +1140,7 @@ class BNode<T extends Comparable<? super T> > implements Comparable<BNode<? exte
 	BNode<T> left;
 	BNode<T> right;
 	BNode<T> parent;
+	int hd;
 	
 	public BNode() {
 		

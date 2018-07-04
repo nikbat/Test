@@ -149,6 +149,58 @@ public class MyLinkedList2<T> {
 			return printList(n.getNext()) + n.getData();
 		}
 	}
+
+	//https://practice.geeksforgeeks.org/problems/merge-two-sorted-linked-lists/1
+	static L2Node<Integer> mergeList(L2Node<Integer> r1, L2Node<Integer> r2){
+
+		if(r1 == null){
+			return r2;
+		}
+
+		if(r2 == null){
+			return r1;
+		}
+
+		L2Node<Integer> root = null;
+		L2Node<Integer> runner = null;
+
+
+		if(r1.getData() < r2.getData()){
+			root = r1;
+			r1 = r1.getNext();
+		}else{
+			root = r2;
+			r2 = r2.getNext();
+		}
+		runner = root;
+
+		while(true){
+			if(r1 == null || r2 == null){
+				break;
+			}
+
+			if(r1.getData() < r2.getData()){
+				runner.setNext(r1);
+				r1 = r1.getNext();
+				runner = runner.getNext();
+			} else if(r2.getData() < r1.getData()){
+				runner.setNext(r2);
+				r2 = r2.getNext();
+				runner = runner.getNext();
+			}
+		}
+
+		if(r1 != null){
+			runner.setNext(r1);
+		}
+
+		if(r2 != null){
+			runner.setNext(r2);
+		}
+
+		return root;
+
+	}
 	
 	
 	
@@ -195,6 +247,23 @@ public class MyLinkedList2<T> {
 		lb.add(2);
 		L2Node<Integer> n = l1.s(la.root, lb.root, 0);
 		System.out.println(n);
+
+		MyLinkedList2<Integer> lm1 = new MyLinkedList2<Integer>();
+		lm1.add(1);
+		lm1.add(3);
+		lm1.add(5);
+		lm1.add(7);
+		lm1.add(9);
+
+		MyLinkedList2<Integer> lm2 = new MyLinkedList2<Integer>();
+		lm2.add(2);
+		lm2.add(4);
+		lm2.add(6);
+		lm2.add(8);
+		lm2.add(12);
+
+		L2Node<Integer> nm = MyLinkedList2.mergeList(lm1.root, lm2.root);
+		System.out.println(nm);
 		
 	}
 }

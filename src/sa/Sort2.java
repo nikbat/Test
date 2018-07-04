@@ -66,13 +66,11 @@ public class Sort2 {
 		//int[] data = {1,2,3,4,5,6,7,8};
 		//so.zigzag(data);
 		//System.out.println(ArrayUtils.toString(data));
-
-
-		
 		int[] data1 = {1,2,3,4,5,6,7,8};
 		int[] data2 = {4, 3, 7, 8, 6, 2, 1};
-		so.zigzag1(data1);
-		System.out.println("zigzag"+ArrayUtils.toString(data1));
+		int[] data5 = {4, 3, 7, 8, 6, 2, 1};
+		so.zigzag1(data5);
+		System.out.println("zigzag"+ArrayUtils.toString(data5));
 		
 		int[] A={1,2,7,12,16,-1,-1,-1,-1};  
 		int[] B={4,5,8,14};
@@ -466,23 +464,33 @@ public class Sort2 {
 	}
 	
 	private void zigzag1(int[] a){
+		if(a.length < 2){
+			return;
+		}
+		//Arrays.sort(a);
 		boolean flag = true;
-		for(int i =0; i < a.length -1; i++){
+
+		for(int i = 0; i < a.length -1; i++){
+			if(i%2 == 0){
+				flag = true;
+			}else{
+				flag = false;
+			}
 			if(flag){
 				if(a[i] > a[i+1]){
-					int temp = a[i];
+					int t = a[i];
 					a[i] = a[i+1];
-					a[i+1] = temp;
+					a[i+1] = t;
 				}
 			}else{
 				if(a[i] < a[i+1]){
-					int temp = a[i];
+					int t = a[i];
 					a[i] = a[i+1];
-					a[i+1] = temp;
+					a[i+1] = t;
 				}
 			}
-			flag = !flag;
 		}
+
 	}
 	
 	static int[] a1 = { 11, 14, 15, 17, 23, 27, 29, 31, 37, 9 };
