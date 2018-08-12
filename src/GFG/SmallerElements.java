@@ -1,6 +1,7 @@
 package GFG;
 
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class SmallerElements {
@@ -27,5 +28,50 @@ public class SmallerElements {
       System.out.println(r);
     }
   }
+
+  public static void main2 (String[] args) {
+    Scanner scan = new Scanner(System.in);
+    int testCases = scan.nextInt();
+    System.out.println("testCases:"+ testCases);
+    for(int i = 0; i < testCases; i++){
+      int N = scan.nextInt();
+      System.out.println("size:"+N);
+
+      int[] a = new int[N];
+
+      for (int j = 0; j < N; j++){
+        int t = scan.nextInt();
+        System.out.print(t+",");
+        a[j] = t;
+      }
+
+      Arrays.sort(a);
+      int k = scan.nextInt();
+      System.out.println("k:"+k);
+      System.out.println(a[k-1]);
+
+    }
+  }
+
+   /*
+  public static void main (String[] args)
+	 {
+	 //code
+	 Scanner sc=new Scanner(System.in);
+	 int t=sc.nextInt();
+	 while(t>0)
+	 {
+	     int n=sc.nextInt();
+	     int a[]=new int[n];
+	     for(int i=0;i<n;i++)
+	      a[i]=sc.nextInt();
+	     Arrays.sort(a);
+	     int k=sc.nextInt();
+	     System.out.println(a[k-1]);
+	     t--;
+	 }
+
+	 }
+   */
 
 }

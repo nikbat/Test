@@ -1056,6 +1056,28 @@ public class SA {
     System.out.println(minDiff);
   }
 
+  static void distributeChocklate1(int[] a, int k){
+    Arrays.sort(a);
+    int minDiff = Integer.MAX_VALUE;
+    int s = 0;
+    int e = a.length-1;
+    for(int i = 0; i < a.length; i++){
+      if( (i+k-1) >= a.length){
+        break;
+      }
+      int diff = a[i+k-1] - a[i];
+      if(diff < minDiff){
+        s = i;
+        e = i+k-1;
+        minDiff = diff;
+      }
+    }
+    System.out.println(s+","+e);
+    System.out.println(minDiff);
+
+
+  }
+
   //https://practice.geeksforgeeks.org/problems/convert-array-into-zig-zag-fashion/0
   //4 3 7 8 6 2 1
   static void zigzag(int[] a){
@@ -1288,23 +1310,122 @@ public class SA {
     return -1;
   }
 
+  //https://www.geeksforgeeks.org/find-a-partition-point-in-array/
+  static int findPartitionPoint(int[] a){
+    int partitionPoint = -1;
 
+    for(int i = 1; i < a.length-1; i++){
+
+      boolean left = true;
+      boolean right = true;
+
+      //evaluate left
+      for(int j = 0; j<i; j++){
+        if(a[j] > a[i]){
+          left = false;
+          break;
+        }
+      }
+
+      if(!left){
+        //no point in evaluating right if left is not less than value
+        continue;
+      }
+      //evaluate left
+      for(int j = i+1; j < a.length; j++){
+        if(a[j] <= a[i]){
+          right = false;
+          break;
+        }
+      }
+
+      if(left && right){
+        partitionPoint = i;
+        break;
+      }
+
+
+    }
+    return partitionPoint;
+  }
+
+  //https://www.geeksforgeeks.org/arrange-given-numbers-form-biggest-number-set-2/
+  //https://www.programcreek.com/2014/02/leetcode-largest-number-java/
+  //int[] largestNumber = {3,30,34,5,9};
+  static void makeLargestNumberFromString(int[] a){
+    //The idea here is to sort the strings not integers.
+    //This problem can be solved by sorting strings, not sorting integer. Define a comparator to compare strings by concat() right-to-left or left-to-right
+
+    String[] sa = new String[a.length];
+    for(int i = 0; i < a.length; i++){
+      sa[i] = String.valueOf(a[i]);
+    }
+
+    Arrays.sort(sa, (s1, s2) -> {
+      return (s2+s1).compareTo(s1+s2);
+    });
+
+    System.out.println(ArrayUtils.toString(sa));
+
+  }
+
+
+  //https://www.youtube.com/watch?v=BOt1DAvR0zI&index=10&list=PLeIMaH7i8JDjd21ZF6jlRKtChLttls7BG
+  //int[] s012 = {0,1,1,0,1,2,1,0,0,0,1};
+  static void segregate012(int[] a){
+    int s = 0;
+    int l = a.length -1;
+    int pointer = 0;
+    while (pointer <= l) { //IMPORTANT: complere with l NOT a.length
+      if(a[pointer] == 0){
+
+        int t = a[s];
+        a[s] = a[pointer];
+        a[pointer] = t;
+        s++;
+        pointer++;
+
+      }else if(a[pointer] == 1){
+
+        pointer++;
+
+      }else if(a[pointer] == 2){
+
+        int t = a[l];
+        a[l] = a[pointer];
+        a[pointer] = t;
+        l--;
+        //IMPORTANT
+        //pointer++;
+
+
+      }
+    }
+
+    System.out.println(ArrayUtils.toString(a));
+
+  }
 
   public static void main(String[] args){
     System.out.println(SA.isAllCharsUnique1("This"));
-    System.out.println(SA.isAllCharsUnique1("Thismaynotberu"));
+    /*System.out.println(SA.isAllCharsUnique1("Thismaynotberu"));
     System.out.println(SA.isAllCharsUnique2("This"));
-    System.out.println(SA.isAllCharsUnique2("Thismaynotberu"));
+    System.out.println(SA.isAllCharsUnique2("Thismaynotberu"));*/
 
     System.out.println(SA.removeDuplicate("this is a test, lets see"));
-    System.out.println(SA.removeDuplicate1("this is a test, lets see"));
-
+    //System.out.println(SA.removeDuplicate1("this is a test, lets see"));
 
     System.out.println(SA.isAnnagram("motherinlaw1", "hitlerwoman"));
+
     System.out.println(Arrays.toString(SA.reverseArrayInGroup(335, 36)));
+
     SA.fillSpace("Do it today instead of stalling it");
 
+    int[] s012 = {0,1,1,0,1,2,1,2,0,0,0,1};
+    SA.segregate012(s012);
 
+    int[] largestNumber = {3,30,34,5,9};
+    SA.makeLargestNumberFromString(largestNumber);
 
     int[] ra = {9,12,15,17,25,28, 32, 37, 3, 5, 7, 8 };
     System.out.println(SA.findPivot(ra));
@@ -1344,7 +1465,7 @@ public class SA {
     SA.printMaxOfAllSubArray(findMaxSubArrayElement, 3);
     SA.printMaxOfAllSubArray(findMaxSubArrayElement1, 4);
 
-    int[] maxSubsequence = {1, 2, 3};
+    int[] maxSubsequence = {1, 2, 3}; //kadens algorithim
     SA.printMaxSubSequence(maxSubsequence);
     int[] maxSubsequence1 = {-1, -2, -3, -4};
     SA.printMaxSubSequence(maxSubsequence1);
@@ -1359,12 +1480,21 @@ public class SA {
 
     int[] distributeChoclate = {3, 4, 1, 9, 56, 7, 9, 12};
     SA.distributeChocklate(distributeChoclate, 5);
+    int[] distributeChoclate1 = {3, 4, 1, 9, 56, 7, 9, 12};
+    distributeChocklate1(distributeChoclate1, 5);
+    int[] distributeChoclate2 = {7, 3, 2, 4, 9, 12, 56};
+    distributeChocklate1(distributeChoclate2, 3);
 
     int[] zigzag = {4, 3, 7, 8, 6, 2, 1};
     SA.zigzag(zigzag);
 
     int[] equilibriumPoint = {1, 3, 5, 2, 2};
     System.out.println(SA.equilibriumPoint(equilibriumPoint));
+
+    int pp[] = {4, 3, 2, 5, 8, 6, 7};
+    System.out.println(SA.findPartitionPoint(pp));
+    int pp1[] = {5, 6, 2, 8, 10, 9, 8};
+    System.out.println(SA.findPartitionPoint(pp1));
 
     int[] sortElementsInFrequency = {2, 3, 2, 4, 5, 12, 2, 3, 3, 3, 12};
     SA sa = new SA();
@@ -1469,5 +1599,7 @@ public class SA {
     SA.totalParenthesis(new char[6], 3, 0, 0, 0);
 
   }
+
+
 
 }
