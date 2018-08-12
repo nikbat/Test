@@ -1,6 +1,8 @@
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BitField;
 
 import java.util.Arrays;
+import java.util.BitSet;
 
 public class MyInteger {
 
@@ -9,6 +11,9 @@ public class MyInteger {
 		// System.out.println(MyInteger.findSqrt(49));
 		// combine(0);
 		// printFib();
+    MyInteger.findMissingNumber();
+		System.out.println(MyInteger.stringToInteger("1234"));
+		System.out.println(MyInteger.integerToString(-1234));
 		System.out.println(reverseString(s));
 		//primeFactor(18);
 		factor(30);
@@ -295,6 +300,156 @@ public class MyInteger {
 			}
 		}
 	}
+
+	static int stringToInteger(String s){
+		if(s == null){
+			return -1;
+		}
+
+		boolean isNegative = false;
+
+		if(s.startsWith("-")){
+			isNegative = true;
+		}
+
+		int number = 0;
+		for(int i  = 0; i < s.length(); i++){
+			number = number * 10;
+			int temp = s.charAt(i) - '0';
+			if(temp < 0 || temp > 9 ){
+				return -1;
+			}
+			number = number + s.charAt(i) - '0';
+		}
+		if(isNegative){
+			number = number * -1;
+		}
+
+		return number;
+	}
+
+	static String integerToString(int n){
+
+		StringBuilder sb = new StringBuilder();
+
+		boolean isNegative = false;
+
+		if(n < 0){
+			isNegative = true;
+			n = n * -1;
+		}
+
+		while(n != 0){
+			int t = n % 10;
+			n = n/10;
+			sb.append(t);
+		}
+
+		sb.reverse();
+		if(isNegative) {
+			return "-" + sb.toString();
+		}else{
+			return sb.toString();
+		}
+	}
+
+	static void rotateMatrix(int N, int mat[][])
+	{
+		// Consider all squares one by one
+		for (int x = 0; x < N / 2; x++) {
+			// Consider elements in group of 4 in
+			// current square
+			for (int y = x; y < N-x-1; y++) {
+				// store current cell in temp variable
+				int temp = mat[x][y];
+
+				// move values from right to top
+				mat[x][y] = mat[y][N-1-x];
+
+				// move values from bottom to right
+				mat[y][N-1-x] = mat[N-1-x][N-1-y];
+
+				// move values from left to bottom
+				mat[N-1-x][N-1-y] = mat[N-1-y][x];
+
+				// assign temp to left
+				mat[N-1-y][x] = temp;
+			}
+		}
+	}
+
+	//https://www.youtube.com/watch?v=Jtu6dJ0Cb94
+	static void rotateMatrix1(int N, int mat[][])
+	{
+		int totalNumberOfLevels = N/2;
+		int level = 0;
+		int last = N-1;
+
+		while(level > totalNumberOfLevels){
+
+			for(int i = 0; i < last; i++){
+				swap(mat, level,i, i,last);
+				swap(mat, level,i, last, last-1+level);
+				swap(mat, level,i, last-1+level, level);
+			}
+			level++;
+			last--;
+		}
+	}
+
+	static void swap(int[][] mat, int i, int j, int k, int l){
+		int t = mat[i][j];
+		mat[i][j] = mat[k][l];
+		mat[k][l] = t;
+	}
+
+	static void findMissingNumber(){
+    int[] a = new int[100];
+    BitSet bitField = new BitSet(100);
+    for(int i = 0; i < a.length; i++){
+      if(i == 81){
+        a[i] = -1;
+        continue;
+
+      }
+      a[i] = i;
+      bitField.set(i);
+    }
+
+    int[] block = findMissingBlock(a);
+    System.out.println(block);
+
+    int i = 0;
+    for(; i < block.length; i++){
+      if(block[i]  != 10){
+        break;
+      }
+    }
+
+    int start = i * 10;
+    int end = i*10 + 10;
+
+    for(int j = start; j < end; j++){
+      if(!bitField.get(j)){
+        System.out.println("Missing Number is "+j);
+        break;
+      }
+    }
+
+  }
+
+  static int[] findMissingBlock(int[] a){
+    int[] block = new int[10];
+    for(int i = 0; i < a.length; i++){
+      int n = a[i]/10;
+      if(a[i] == -1){
+        continue;
+      }
+      block[n]++;
+    }
+    return block;
+  }
+
 
 
 

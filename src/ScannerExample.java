@@ -7,9 +7,10 @@ import java.util.Scanner;
 public class ScannerExample {
 	
 	public static void main(String[] args){
-		/*System.out.println("InputNumber");
+		System.out.println("InputNumber");
 		Scanner scan = new Scanner(System.in);
-		int number = scan.nextInt();
+
+		/*int number = scan.nextInt();
 		System.out.println(number);
 		
 		for(int i = 1; i<=number; i++){
