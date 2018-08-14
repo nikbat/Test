@@ -17,9 +17,10 @@ public class MyBQ {
 	}
 	
 	private void doTask()  throws Exception{
-		
-		MyThreadP p = new MyThreadP(data);
-		MyThreadC c = new MyThreadC(data);
+
+		Producer p = new Producer(data);
+		Consumer c = new Consumer(data);
+
 		Thread pt = new Thread(p);
 		Thread pc = new Thread(c);
 		
@@ -31,16 +32,11 @@ public class MyBQ {
 		
 	}
 
-	
+	class Producer implements Runnable {
 
+		BlockingQueue<Integer> data;
 
-	class MyThreadP implements Runnable {
-		
-		
-		BlockingQueue<Integer> data = new LinkedBlockingQueue<Integer>(1);
-		
-		
-		public MyThreadP(BlockingQueue<Integer> data){
+		public Producer(BlockingQueue<Integer> data){
 			this.data = data;
 		}
 		
@@ -59,13 +55,13 @@ public class MyBQ {
 		}
 	}
 	
-	class MyThreadC implements Runnable {
+	class Consumer implements Runnable {
 		
 		
-		BlockingQueue<Integer> data = new LinkedBlockingQueue<Integer>(1);
+		BlockingQueue<Integer> data;
 		
 		
-		public MyThreadC(BlockingQueue<Integer> data){
+		public Consumer(BlockingQueue<Integer> data){
 			this.data = data;
 		}
 		

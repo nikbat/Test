@@ -3,6 +3,7 @@ package ll2;
 import java.util.LinkedList;
 
 import ll.LNode;
+import ll.MyLinkedList;
 
 public class MyLinkedList2<T> {
 	
@@ -128,24 +129,26 @@ public class MyLinkedList2<T> {
 		l.root = leftStart;
 		System.out.println(l.print());
 	}
-	
-	public L2Node<Integer> s(L2Node<Integer> la, L2Node<Integer> lb, int carry){
-		L2Node<Integer> n = null;
-		if(la == null && lb == null){
+
+	// sum two linked list
+	L2Node<Integer> sum(L2Node<Integer> r1, L2Node<Integer> r2, int carry){
+
+		if(r1 == null && r2 == null){
 			return null;
-		}else{
-			
-			int data = carry;
-			if(la != null){
-				data = data+la.getData();
-			}
-			if(lb != null){
-				data = data+lb.getData();
-			}
-			n = new L2Node(data%10);
-			n.setNext(s(la.getNext(), lb.getNext(), data/10));
-			return n;
 		}
+
+		int data = carry;
+		if(r1 != null){
+			data = data + r1.data;
+		}
+
+		if(r2 != null){
+			data = data + r2.data;
+		}
+
+		L2Node<Integer> node = new L2Node<>((data) % 10);
+		node.next = sum(r1 != null ? r1.next : null, r2 != null ? r2.next : null,  (data +carry) / 10);
+		return node;
 	}
 	
 	public String printList(L2Node<String> n){
@@ -156,146 +159,200 @@ public class MyLinkedList2<T> {
 		}
 	}
 
-	//https://practice.geeksforgeeks.org/problems/merge-two-sorted-linked-lists/1
-	static L2Node<Integer> mergeList(L2Node<Integer> r1, L2Node<Integer> r2){
 
-		if(r1 == null){
+	//https://www.youtube.com/watch?v=4mm39dVLlZ0&index=6&list=PLeIMaH7i8JDio7glJoO1rQIAo4g1msRRG
+	//https://practice.geeksforgeeks.org/problems/reverse-a-linked-list/1
+	L2Node<T> reverse(L2Node<T> root){
+		//10-20-30-40-50-60 ==========> 60-50-40-30-20-10
+		// Here we will change the pointers only, initialize three Nodes
+
+		L2Node<T> current = root;
+		L2Node<T> prev = null;
+		L2Node<T> next = null;
+
+		while(current != null){
+			next = current.next; //next = 20 or next = 30
+			current.next = prev;
+			prev = current; // prev = null so 10 -> null, next iteration 20 -> 10, next interation 30 -> 20, next iteration 40->30
+			current = next;
+		}
+
+		return prev;
+	}
+
+
+	//https://practice.geeksforgeeks.org/problems/rotate-a-linked-list/1
+	L2Node<T> rotate(L2Node<T> root, int k){
+
+		//10-20-30-40-50-60 ======> k=4 ======> 50-60-10-20-30-40
+
+		L2Node<T> current = root;
+		L2Node<T> prev = null;
+		//Traverse the list k time
+		int i = 0;
+		while(i < k && current != null){
+			prev = current;
+			current = current.next;
+			i++;
+		}
+		if(current == null){
+			return root; // List size is less than K, threfore cannot be rotated
+		}
+
+		//This will be out new root i.e. 50
+		L2Node<T> newRoot = current;
+		//set prev.next to null because k will be the end of the LL i.e. 40-null
+		prev.next = null;
+
+
+		//run a second loop to reach the end
+		while(current != null){
+			prev = current;
+			current = current.next;
+		}
+
+		// set prev next i.e. 60 to root i.e. 10
+		prev.next = root;
+
+		return newRoot;
+
+	}
+
+	//https://practice.geeksforgeeks.org/problems/merge-two-sorted-linked-lists/1
+	// This is like a merge sort
+	public static L2Node<Integer> mergeTwoSortedLinkedList(L2Node<Integer> r1, L2Node<Integer> r2){
+
+		L2Node<Integer> root = null;
+		L2Node<Integer> current = null;
+
+		if(r1 == null && r2 == null){
+			return null;
+		}
+
+		if(r1 == null ){
 			return r2;
 		}
 
-		if(r2 == null){
+		if(r2 == null ){
 			return r1;
 		}
 
-		L2Node<Integer> root = null;
-		L2Node<Integer> runner = null;
-
-
-		if(r1.getData() < r2.getData()){
+		if(r1.data < r2.data){
 			root = r1;
-			r1 = r1.getNext();
-		}else{
-			root = r2;
-			r2 = r2.getNext();
-		}
-		runner = root;
-
-		while(true){
-			if(r1 == null || r2 == null){
-				break;
-			}
-
-			if(r1.getData() < r2.getData()){
-				runner.setNext(r1);
-				r1 = r1.getNext();
-				runner = runner.getNext();
-			} else if(r2.getData() < r1.getData()){
-				runner.setNext(r2);
-				r2 = r2.getNext();
-				runner = runner.getNext();
-			}
-		}
-
-		if(r1 != null){
-			runner.setNext(r1);
-		}
-
-		if(r2 != null){
-			runner.setNext(r2);
-		}
-
-		return root;
-
-	}
-
-	L2Node<T> reverse(L2Node<T> root){
-		L2Node<T> prev = null;
-		L2Node<T> next = null;
-		L2Node<T> current = root;
-
-		while(current != null){
-			next = current.next;
-			current.next = prev;
-			prev = current;
-			root = current;
-			current = next;
-		}
-		return root;
-	}
-
-	L2Node<T> rotate(L2Node<T> root, int k) {
-		if(root == null){
-			return root;
-		}
-		L2Node<T> runner = root;
-
-		for(int i = 0; i < k-1; i++){
-			if(runner == null){
-				System.out.println("Linkedlist is smaller the k, threfore cannot be rotated");
-				return root;
-			}
-			runner = runner.next;
-		}
-
-		L2Node<T> newRoot= runner.next;
-		//set runner next to null
-		runner.next = null;
-
-		//iterate newroot till we reach end
-		runner = newRoot;
-		while(runner.next != null){
-			runner = runner.next;
-		}
-		runner.next = root;
-		return newRoot;
-	}
-
-	static L2Node<Integer> merge(L2Node<Integer> root1, L2Node<Integer> root2 ){
-		L2Node<Integer> r1 = root1;
-		L2Node<Integer> r2 = root2;
-		L2Node<Integer> r = null;
-
-		L2Node<Integer> root = null;
-
-		if (r1.data < r2.data) {
-			r = r1;
+			current = root;
 			r1 = r1.next;
 		}else{
-			r = r2;
+			root = r2;
+			current = root;
 			r2 = r2.next;
 		}
-		root = r;
 
-		while(r1 != null && r2 != null) {
-			if (r1.data < r2.data) {
-				r.next = r1;
-				r = r.next;
+		while(r1 != null && r2 != null){
+			if(r1.data < r2.data){
+				current.next = r1;
+				current = current.next;
 				r1 = r1.next;
 			}else{
-				r.next = r2;
-				r = r.next;
+				current.next = r2;
+				current = current.next;
 				r2 = r2.next;
 			}
 		}
 
 		while(r1 != null){
-			r.next = r1;
-			r = r.next;
+			current.next = r1;
+			current = current.next;;
 			r1 = r1.next;
 		}
 
 		while(r2 != null){
-			r.next = r2;
-			r = r.next;
+			current.next = r2;
+			current = current.next;
 			r2 = r2.next;
 		}
 
 		return root;
-
 	}
-	
-	
-	
+
+	//https://practice.geeksforgeeks.org/problems/intersection-point-in-y-shapped-linked-lists/1
+	//https://www.youtube.com/watch?v=_7byKXAhxyM&index=16&list=PLeIMaH7i8JDio7glJoO1rQIAo4g1msRRG
+	static L2Node<Integer> findIntersection(L2Node<Integer> r1, L2Node<Integer> r2){
+		if(r1 == null || r2 == null){
+			return null;
+		}
+
+		L2Node<Integer> n1 = r1;
+		L2Node<Integer> n2 = r2;
+
+		//find the length of node1 and node 2 i.e. n1 and n2 and differnce
+		int l1 = 0;
+		int l2 = 0;
+		int d = 0;
+
+
+		while(n1 != null){
+			n1 = n1.next;
+			l1++;
+		}
+
+		while(n2 != null){
+			n2 = n2.next;
+			l2++;
+		}
+
+		//find the different in lenght
+		if(l1 > l2){
+			d = l1 - l2;
+		}else{
+			d = l2 - l1;
+		}
+
+		//reset n1 and n2
+		n1 = r1;
+		n2 = r2;
+
+		//move d nodes in the longer linked list
+		if(l1 > l2){
+			for(int i = 0; i < d; i++){
+				n1 = n1.next;
+			}
+		}else{
+			for(int i = 0; i < d; i++){
+				n2 = n2.next;
+			}
+		}
+		//now iterate through both list and compare n1 and n2
+		while(n1 != null && n2 != null){
+			if(n1.data == n2.data){
+				return n1;
+			}
+			n1 = n1.next;
+			n2 = n2.next;
+		}
+
+		return null;
+	}
+
+	//https://practice.geeksforgeeks.org/problems/pairwise-swap-elements-of-a-linked-list-by-swapping-data/1
+	static void swapList(L2Node<Integer> root){
+		L2Node<Integer> current = root;
+		while(current != null && current.next != null){
+			Integer i1 = current.data;
+			Integer i2 = current.next.data;
+			current.data = i2;
+			current.next.data = i1;
+
+			current = current.next;
+			if(current != null){
+				current = current.next;
+			}else{
+				break;
+			}
+		}
+	}
+
+
+
 	public static void main(String[] args){
 		MyLinkedList2<String> ll = new MyLinkedList2<String>();
 		ll.add("A");
@@ -327,10 +384,9 @@ public class MyLinkedList2<T> {
 		l1.add(2);
 		l1.add(1);
 
-
-		
 		l1.partitionList(l1, 5);
-		
+
+		//Sum
 		MyLinkedList2<Integer> la = new MyLinkedList2<>();
 		la.add(7);
 		la.add(1);
@@ -339,9 +395,11 @@ public class MyLinkedList2<T> {
 		lb.add(5);
 		lb.add(9);
 		lb.add(2);
-		L2Node<Integer> n = l1.s(la.root, lb.root, 0);
-		System.out.println(n);
 
+		L2Node<Integer> n1 = l1.sum(la.root, lb.root, 0);
+		System.out.println(la.print(n1));
+
+		//merge two sorted linked list
 		MyLinkedList2<Integer> lm1 = new MyLinkedList2<Integer>();
 		lm1.add(1);
 		lm1.add(3);
@@ -356,7 +414,7 @@ public class MyLinkedList2<T> {
 		lm2.add(8);
 		lm2.add(12);
 
-		L2Node<Integer> nm = MyLinkedList2.mergeList(lm1.root, lm2.root);
+		L2Node<Integer> nm = MyLinkedList2.mergeTwoSortedLinkedList(lm1.root, lm2.root);
 		System.out.println(nm);
 
 		MyLinkedList2<Integer> lmn1 = new MyLinkedList2<Integer>();
@@ -372,12 +430,16 @@ public class MyLinkedList2<T> {
 		lmn2.add(6);
 		lmn2.add(8);
 		lmn2.add(12);
+		lmn2.add(14);
+		lmn2.add(15);
 
-		nm = MyLinkedList2.merge(lmn1.root, lmn2.root);
+		//nm = MyLinkedList2.merge(lmn1.root, lmn2.root);
+		//lm1.print(nm);
+
+		nm = MyLinkedList2.mergeTwoSortedLinkedList(lmn1.root, lmn2.root);
 		lm1.print(nm);
 
-
-
+		//reverse
 		MyLinkedList2<Integer> rl = new MyLinkedList2<Integer>();
 		rl.add(1);
 		rl.add(2);
@@ -400,9 +462,43 @@ public class MyLinkedList2<T> {
 		ro.add(5);
 		ro.add(6);
 
+		//L2Node<Integer> rn = ro.rotate(ro.root, 4);
 		L2Node<Integer> rn = ro.rotate(ro.root, 4);
 		ro.print(rn);
 
+		//find intersection
+		L2Node<Integer> in1 = new L2Node<>(3);
+		L2Node<Integer> in2 = new L2Node<>(6);
+		L2Node<Integer> in3 = new L2Node<>(9);
+		L2Node<Integer> in4 = new L2Node<>(15);
+		L2Node<Integer> in5 = new L2Node<>(30);
+		L2Node<Integer> in6 = new L2Node<>(10);
+
+		in1.setNext(in2);
+		in2.setNext(in3);
+		in3.setNext(in4);
+		in4.setNext(in5);
+
+		in6.setNext(in4);
+
+		L2Node<Integer> in7 = MyLinkedList2.findIntersection(in1, in6);
+		System.out.println(in7);
+
+		//swap list
+		MyLinkedList2<Integer> sl = new MyLinkedList2<Integer>();
+		sl.add(1);
+		sl.add(2);
+		sl.add(3);
+		sl.add(4);
+		sl.add(5);
+		sl.add(6);
+		sl.add(7);
+		sl.add(8);
+		sl.add(9);
+		sl.add(10);
+
+		MyLinkedList2.swapList(sl.root);
+		sl.print(sl.root);
 
 
 	}

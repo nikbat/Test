@@ -565,7 +565,27 @@ public class SA {
       }
     }
     System.out.println(Arrays.toString(a));
+  }
 
+  static void arrangeArray1(int[] a){
+
+    for(int i = 0; i < a.length; i++){
+
+      if(a[i] == -1){
+        continue;
+      }
+
+      int t = a[i];
+
+      if(t == i){
+        continue;
+      }else if(t < a.length){
+        a[i] = a[t];
+        a[t] = t;
+        i = i-1;
+      }
+
+    }
   }
 
 
@@ -861,7 +881,7 @@ public class SA {
   //1 101 2 3 100 4 5
   static void printMaximumSumSubSequence1(int[] a){
 
-    List<List<Integer>> subsequence = new ArrayList<>(); // there is np use of this array, I added it for see sequences
+    List<List<Integer>> subsequence = new ArrayList<>(); // there is no use of this array, I added it for see sequences
     int sum = 0;
 
     for(int i = 0; i < a.length; i++){
@@ -911,6 +931,7 @@ public class SA {
     System.out.println(sum);
   }
 
+  //Kaden's algo
   //https://practice.geeksforgeeks.org/problems/kadanes-algorithm/0
   static void printMaxSubSequence(int[] a) {
     int sum = a[0];
@@ -930,6 +951,8 @@ public class SA {
     System.out.println(sum);
   }
 
+  //Kaden's algo
+  //https://practice.geeksforgeeks.org/problems/kadanes-algorithm/0
   static void printMaxSubSequenceWithIndexes(int[] a){
     int sum = a[0];
     int currentSum = 0;
@@ -1369,6 +1392,23 @@ public class SA {
 
   }
 
+  static void isStringRotatedByTwoPlaces(String s1, String s2){
+    //s1 = "amazon";
+    //s2 = "onamaz";
+    String s = s2+s2;
+
+    if(s.contains(s1)){
+      int start = s.indexOf(s1);
+      if(start == 2){
+        System.out.println(true);
+      }else if(start+s1.length()+2 == s.length()){ // OR it could be s1.lenght - start == 2
+        System.out.println(true);
+      }else{
+        System.out.println(true);
+      }
+    }
+  }
+
 
   //https://www.youtube.com/watch?v=BOt1DAvR0zI&index=10&list=PLeIMaH7i8JDjd21ZF6jlRKtChLttls7BG
   //int[] s012 = {0,1,1,0,1,2,1,0,0,0,1};
@@ -1395,16 +1435,79 @@ public class SA {
         a[l] = a[pointer];
         a[pointer] = t;
         l--;
-        //IMPORTANT
+        //IMPORTANT - dont increase the pointer
         //pointer++;
-
-
       }
     }
-
     System.out.println(ArrayUtils.toString(a));
 
   }
+
+  //https://practice.geeksforgeeks.org/problems/recursively-remove-all-adjacent-duplicates/0
+  static void removeAdjacentDuplicates(String s){
+    char[] sa = s.toCharArray();
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0; i < sa.length-1; i++){
+      if(sa[i] == sa[i+1]){
+        int k = i+1;
+        while(k < sa.length && sa[i] == sa[k] ){
+          k++;
+        }
+        i = k-1;
+      }else{
+        sb.append(sa[i]);
+      }
+    }
+    System.out.println(sb);
+  }
+
+  //int[] a = {9,12,15,17,25,28,32,37,3,5,7,8};
+
+  static int findElementInARotatedArray(int[] a, int k){
+    int s = 0;
+    int l = a.length-1;
+    int p = findPivotInRotatedArray(a);
+    if(p != -1){
+      if(k > a[p] && k <= a[l]){
+        s = p;
+      }else{
+        l = p-1;
+      }
+    }
+
+    while(s <= l){
+      int m = (s+l)/2;
+      if(a[m] == k){
+        return m;
+      }else if(k > a[m]){
+        s = m+1;
+      }else{
+        l = m-1;
+      }
+    }
+
+    return -1;
+  }
+
+  static int findPivotInRotatedArray(int[] a){
+    int s = 0;
+    int l = a.length-1;
+
+    while(s <= l){
+      int m = (s+l)/2;
+      if(a[m] > a[m+1]){
+        //this is the place ordered reversed
+        return m+1;
+      }else if(a[s] > a[m]){
+        l = m-1;
+      }else{
+        s = m+1;
+      }
+    }
+    return -1;
+  }
+
+
 
   public static void main(String[] args){
     System.out.println(SA.isAllCharsUnique1("This"));
@@ -1421,11 +1524,22 @@ public class SA {
 
     SA.fillSpace("Do it today instead of stalling it");
 
+    int[] rotatedArray = {9,12,15,17,25,28,32,37,3,5,7,8};
+    System.out.println(SA.findElementInARotatedArray(rotatedArray, 8));
+    System.out.println(SA.findPivotInRotatedArray(rotatedArray));
+
+    SA.removeAdjacentDuplicates("geeksforgeek");
+    SA.removeAdjacentDuplicates("acaaabbbacdddd");
+
     int[] s012 = {0,1,1,0,1,2,1,2,0,0,0,1};
     SA.segregate012(s012);
 
     int[] largestNumber = {3,30,34,5,9};
     SA.makeLargestNumberFromString(largestNumber);
+
+
+    SA.isStringRotatedByTwoPlaces("amazon", "azonam");
+    SA.isStringRotatedByTwoPlaces("amazon", "onamaz");
 
     int[] ra = {9,12,15,17,25,28, 32, 37, 3, 5, 7, 8 };
     System.out.println(SA.findPivot(ra));
@@ -1533,8 +1647,11 @@ public class SA {
         {0,2,3,4,5,6},
     };
 
+
     int arrangeArray[] = {-1, -1, 6, 1, 9, 3, 2, -1, 4, -1};
-    SA.arrangeArray(arrangeArray);
+    SA.arrangeArray1(arrangeArray);
+    int arrangeArray1[] = {19, 7, 0, 3, 18, 15, 12, 6, 1, 8, 11, 10, 9, 5, 13, 16, 2, 14, 17, 4};
+    SA.arrangeArray1(arrangeArray1);
 
     int arr[][] = {
         {11, 2, 4},
