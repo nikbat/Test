@@ -60,20 +60,19 @@ public class BTree2<T extends Comparable<T>> {
 		}
 	}
 
-	private boolean bfs1(BNode<T> n, T t){
-		if(n == null){
-			return false;
-		}
-		if(n.data == t){
-			return true;
-		}else if(n.data.compareTo(t) > 0){
-			return bfs1(n.left, t);
-		}else if(n.data.compareTo(t) < 0){
-			return bfs1(n.right, t);
-		}else{
-			return false;
-		}
-	}
+	/*
+		IMPORTANT READ
+		1. Inorder Traversal always output sorted output
+		2. Find inoreder predecorror https://www.youtube.com/watch?v=rukYFD8cYBY&list=PLeIMaH7i8JDj7DnmO7lll97P1yZjMCpgY
+			if the node has left child - go to left and from left keep iterating right child
+			if node has no left child, search the node from root and each time you take the right turn, keep that in memory, the last right is our predecossor
+
+		3. Find inoreder successor https://www.youtube.com/watch?v=JdmAYw5h3G8&list=PLeIMaH7i8JDj7DnmO7lll97P1yZjMCpgY&index=2
+			if the node has right child -> go to right child and keep traverseing to the left of that right child
+			if the node has no right child -> serach that node and keep in memory from where we took the last left
+
+		4. Level Order Traversal of binary Tree
+	 */
 
 	public boolean bfs(BNode<T> node, T t){
 		if(node == null){
@@ -342,7 +341,6 @@ public class BTree2<T extends Comparable<T>> {
 		serialize(node,sb);
 		System.out.println(sb);
 
-
 		String[] tokens = sb.toString().split(",");
 		BNode<Integer> root2 = deserialize(tokens);
 		System.out.println(root2);
@@ -401,7 +399,6 @@ public class BTree2<T extends Comparable<T>> {
 			return false;
 		}
 	}
-
 
 	//2 large binary trees check if T1 is a subtree of T2
 	public boolean subTree(BNode<T> t1, BNode<T> t2){
@@ -673,8 +670,8 @@ public class BTree2<T extends Comparable<T>> {
 
 	public BNode<Integer> build(int[] a, int s, int l){
 		BNode<Integer> n = null;
-		if(s < l){
 
+		if(s < l){
 			int m = (s+l)/2;
 			n = new BNode(a[m]);
 			n.left = build(a,s, m-1);
@@ -904,11 +901,68 @@ public class BTree2<T extends Comparable<T>> {
 		leftViewUtil(root.right, level+1);
 	}
 
+  //https://www.youtube.com/watch?v=NjdOhYKjFrU
+  //This can be done recursively also
+  // Make a queue and insert a node (left and right) and null (-1), while dequeuq if null print a new line
+  static void levelOrderTraversal(BNode<Integer> n){
+    if(n == null){
+      return;
+    }
+    Queue<BNode<Integer>> q = new ArrayDeque<>();
+    q.add(n);
+    q.add(new BNode<Integer>(-1));
+    while(!q.isEmpty()){
+      BNode<Integer> t = q.poll();
+      if(t != null && t.data != -1){
+        System.out.print(t.data+",");
+        if(t.left != null){
+          q.add(t.left);
+        }
+
+        if(t.right != null){
+          q.add(t.right);
+        }
+      }else if(t.data == -1){
+        System.out.println("");
+        if(!q.isEmpty()) {
+          q.add(new BNode<Integer>(-1));
+        }
+      }
+    }
+  }
+
+  public void levelOrderTraversalGeneric(BNode<T> root){
+	  if(root == null) return;
+
+	  Queue<BNode<T>> q = new LinkedList<>();
+	  q.add(root);
+	  //insert null, null value tells us if the level changed
+    q.add(null);
+
+    while(!q.isEmpty()){
+      BNode<T> n = q.poll();
+      if(n != null){
+        System.out.print(n+",");
+
+        if(n.left != null) {
+          q.add(n.left);
+        }
+        if(n.right != null) {
+          q.add(n.right);
+        }
+      }else{
+        if(!q.isEmpty()){
+          System.out.println();
+          q.add(null);
+        }
+      }
+    }
+  }
 
 
 	//vertical order Traversal
 	//https://www.youtube.com/watch?v=PQKkr036wRc
-
+  // Create a HashMap<Integer, LinkedList> for root put i=0 for left i-1 and for right i+1
 	HashMap<Integer,LinkedList<BNode<T>>> horizontalDistanceMap =  new HashMap<>();
 	void verticalOrderTraversal(BNode<T> node){
 		if(node == null){
@@ -937,13 +991,31 @@ public class BTree2<T extends Comparable<T>> {
 				q.add(n.right);
 			}
 
-
-
 			//verticalOrderTraversal(n.left, horizontalDistance - 1);
 			//verticalOrderTraversal(n.right, horizontalDistance + 1);
 		}
-
 	}
+
+	//see iterative approach above
+	public void verticalOrderTraversalRecrusive(BNode<T> n, int i,  HashMap<Integer,LinkedList<BNode<T>>> hdMap){
+    if(n == null) return;
+
+    LinkedList<BNode<T>> list = hdMap.get(i);
+
+    if(list == null){
+      list = new LinkedList<>();
+      list.add(n);
+      hdMap.put(i, list);
+    }else {
+      list.add(n);
+    }
+
+    verticalOrderTraversalRecrusive(n.left, i-1, hdMap );
+    verticalOrderTraversalRecrusive(n.right, i+1, hdMap);
+
+  }
+
+
 
 	//Bootom View of a Binary Tree
 	//https://www.youtube.com/watch?v=V7alrvgS5AI
@@ -988,41 +1060,58 @@ public class BTree2<T extends Comparable<T>> {
 		return 1+Math.max(findMaxHeight(n.left), findMaxHeight(n.right));
 	}
 
-	//https://www.youtube.com/watch?v=NjdOhYKjFrU
-	//This can be done recursively also
-	static void levelOrderTraversal(BNode<Integer> n){
-		if(n == null){
-			return;
-		}
-		Queue<BNode<Integer>> q = new ArrayDeque<>();
-		q.add(n);
-		q.add(new BNode<Integer>(-1));
-		while(!q.isEmpty()){
-			BNode<Integer> t = q.poll();
-			if(t != null && t.data != -1){
-				System.out.print(t.data+",");
-				if(t.left != null){
-					q.add(t.left);
-				}
+	//https://www.youtube.com/watch?v=aYwiLCCdb-k&index=19&list=PLeIMaH7i8JDj7DnmO7lll97P1yZjMCpgY
+  //do inorder traversal
+  int sum = 0;
+  Stack<BNode<Integer>> s = new Stack<>();
+  public void findSumPath(BNode<Integer> n, int k){
 
-				if(t.right != null){
-					q.add(t.right);
-				}
-			}else if(t.data == -1){
-				System.out.println("");
-				if(!q.isEmpty()) {
-					q.add(new BNode<Integer>(-1));
-				}
-			}
-		}
-	}
+	  if(n == null){
+	    return;
+    }
+
+    sum = sum + n.data;
+	  s.push(n);
+	  if(sum == k){
+	    s.stream().forEach(tn -> System.out.print(tn.data +","));
+    }
+    findSumPath(n.left, k);
+    findSumPath(n.right, k);
+
+    sum = sum - s.pop().data;
+  }
+
+  //https://www.youtube.com/watch?v=zIkDfgFAg60&index=30&list=PLeIMaH7i8JDj7DnmO7lll97P1yZjMCpgY
+  // do inorder traversal, put in stack, instead of printing node - print full stack when left and right are null, after right pop the last element from stack
+  Stack<BNode<Integer>> rlpath = new Stack<>();
+  public void printRootToLeaf(BNode<Integer> n){
+
+    if(n == null) return;
+
+    rlpath.add(n);
+    printRootToLeaf(n.left);
+
+    //print stack if both left and right are null
+    if(n.left == null && n.right == null) {
+      rlpath.stream().forEach(tn -> {
+        System.out.print(tn.data + ",");
+      });
+      System.out.println();
+    }
+
+    printRootToLeaf(n.right);
+
+    //pop element
+    rlpath.pop();
+
+  }
 
 
+	//TODO:
 	//https://www.youtube.com/watch?v=I3BC8nEKYm8
 	static void diogonalTraversalOfBinaryTree(){
 
 	}
-
 
 	public static void main(String[] args){
 
@@ -1040,6 +1129,8 @@ public class BTree2<T extends Comparable<T>> {
 		tree.treeInsert(125);
 		tree.treeInsert(175);
 		tree.treeInsert(110);
+
+		tree.serialize(tree.root);
 
 
 		/*tree.treeInsert(500);
@@ -1063,9 +1154,20 @@ public class BTree2<T extends Comparable<T>> {
 		tree1.treeInsert(30);
 		tree1.treeInsert(40);
 
+    tree1.findSumPath(tree1.root, 425);
+		tree1.findSumPath(tree1.root, 485);
+
+    tree1.printRootToLeaf(tree1.root);
+
+
+		tree1.verticalOrderTraversal(tree1.root);
+    HashMap<Integer,LinkedList<BNode<Integer>>> horizontalDistanceMap1 =  new HashMap<>();
+		tree1.verticalOrderTraversalRecrusive(tree1.root, 0, horizontalDistanceMap1);
+
 		tree1.spiralOrderTraversal(tree1.root);
 
 		tree1.levelOrderTraversal(tree1.root);
+		tree1.levelOrderTraversalGeneric(tree1.root);
 
 		System.out.println(tree1.dfsRecursive(tree1.root, 700));
 

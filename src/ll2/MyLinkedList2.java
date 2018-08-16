@@ -162,13 +162,13 @@ public class MyLinkedList2<T> {
 
 	//https://www.youtube.com/watch?v=4mm39dVLlZ0&index=6&list=PLeIMaH7i8JDio7glJoO1rQIAo4g1msRRG
 	//https://practice.geeksforgeeks.org/problems/reverse-a-linked-list/1
-	L2Node<T> reverse(L2Node<T> root){
+	static L2Node<Integer> reverse(L2Node<Integer> root){
 		//10-20-30-40-50-60 ==========> 60-50-40-30-20-10
 		// Here we will change the pointers only, initialize three Nodes
 
-		L2Node<T> current = root;
-		L2Node<T> prev = null;
-		L2Node<T> next = null;
+		L2Node<Integer> current = root;
+		L2Node<Integer> prev = null;
+		L2Node<Integer> next = null;
 
 		while(current != null){
 			next = current.next; //next = 20 or next = 30
@@ -351,6 +351,13 @@ public class MyLinkedList2<T> {
 		}
 	}
 
+	//https://www.youtube.com/watch?v=9F55R1VJRZ4&index=19&list=PLeIMaH7i8JDio7glJoO1rQIAo4g1msRRG
+	//https://practice.geeksforgeeks.org/problems/reverse-a-linked-list-in-groups-of-given-size/1
+
+	public static void reverseListInGroups(L2Node<Integer> root, int k){
+
+	}
+
 
 
 	public static void main(String[] args){
@@ -451,7 +458,7 @@ public class MyLinkedList2<T> {
 		rl.add(8);
 		rl.add(9);
 		rl.add(10);
-		L2Node<Integer> nn = rl.reverse(rl.root);
+		L2Node<Integer> nn = MyLinkedList2.reverse(rl.root);
 		rl.print(nn);
 
 		MyLinkedList2<Integer> ro = new MyLinkedList2<Integer>();
@@ -500,6 +507,21 @@ public class MyLinkedList2<T> {
 		MyLinkedList2.swapList(sl.root);
 		sl.print(sl.root);
 
+		//reverse list in groups
+		MyLinkedList2<Integer> rgll = new MyLinkedList2<Integer>();
+		rgll.add(1);
+		rgll.add(2);
+		rgll.add(3);
+		rgll.add(4);
+		rgll.add(5);
+		rgll.add(6);
+		rgll.add(7);
+		rgll.add(8);
+		rgll.add(9);
+		rgll.add(10);
+		//L2Node<Integer> n = MyLinkedList2.reverseListInGroups(rgll.root, 4);
+		//rgll.print(n);
+		MyLinkedList2.reverseListInGroups(rgll.root, 4);
 
 	}
 }
