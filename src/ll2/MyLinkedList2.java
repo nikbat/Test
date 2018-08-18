@@ -358,6 +358,21 @@ public class MyLinkedList2<T> {
 
 	}
 
+	static L2Node<Integer> rl(L2Node<Integer> n){
+    L2Node<Integer> prev = null;
+    L2Node<Integer> next = n;
+    L2Node<Integer> current = n;
+
+	  while(current != null){
+	    next = current.next;
+	    current.next = prev;
+	    prev = current;
+	    current = next;
+    }
+    return prev;
+
+  }
+
 
 
 	public static void main(String[] args){
@@ -390,6 +405,8 @@ public class MyLinkedList2<T> {
 		l1.add(10);
 		l1.add(2);
 		l1.add(1);
+
+		l1.rl(l1.root);
 
 		l1.partitionList(l1, 5);
 
