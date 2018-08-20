@@ -1,6 +1,6 @@
 package stack;
 
-import java.util.Stack;
+import java.util.*;
 
 public class MyStack2 {
 
