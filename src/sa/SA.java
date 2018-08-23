@@ -619,7 +619,6 @@ public class SA {
     }
   }
 
-
   //https://www.geeksforgeeks.org/rearrange-array-arri/
   //int a[] = {-1, -1, 6, 1, 9, 3, 2, -1, 4, -1}
   static void arrangeArray(int[] a){
@@ -2268,6 +2267,62 @@ public class SA {
     }
   }
 
+  //https://www.geeksforgeeks.org/n-queen-problem-backtracking-3/
+  static boolean queen(int[][] a, int col){
+
+    if(col >= a[0].length){
+      return true;
+    }
+
+    for(int i = 0; i < a.length; i++){
+      if(isQueenSafe(a, i, col)){
+        //place the queen
+        a[i][col] = 1;
+        //System.out.println(ArrayUtils.toString(a));
+        if(queen(a,  col+1)){
+            return true;
+        }
+        //reset backtrack
+        a[i][col] = 0;
+      }
+    }
+    return false;
+  }
+
+  static boolean isQueenSafe(int a[][], int row, int col){
+
+    int i, j;
+    // check columns only check the last column because we are placeing from left
+
+    for(i = 0; i < col; i++){
+      if(a[row][i] == 1) {
+        return false;
+      }
+    }
+
+    //check row
+    for(i = 0; i < a.length; i++){
+      if(a[i][col] == 1) {
+        return false;
+      }
+    }
+
+    //check upper diogonal left side
+    for(i = row, j = col; i >= 0 && j >= 0; i--, j--){
+      if(a[i][j] == 1) {
+        return false;
+      }
+    }
+
+    //check lower diogonal left side
+    for(i = row, j = col; i < a.length && j >=0; i++, j--){
+      if(a[i][j] == 1) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   //TODO
   //https://www.geeksforgeeks.org/minimize-number-unique-characters-string/
@@ -2277,6 +2332,16 @@ public class SA {
 
 
   public static void main(String[] args){
+
+    int board[][] = {{0, 0, 0, 0},
+        {0, 0, 0, 0},
+        {0, 0, 0, 0},
+        {0, 0, 0, 0}
+    };
+    queen(board, 0);
+
+
+    System.out.println(ArrayUtils.toString(board));
     SA.longestSubStringWithDistinctVowles("artyebui", 2);
     SA.longestSubStringWithoutRepeatingChars("ABDEFGABEF");
     StringBuilder sbAddBinary = new StringBuilder();
