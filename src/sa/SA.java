@@ -7,6 +7,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class SA {
 
@@ -247,8 +248,44 @@ public class SA {
     System.out.println(String.valueOf(fa));
   }
 
+  //https://www.youtube.com/watch?v=EpP6YuqzHe8&list=PLeIMaH7i8JDjd21ZF6jlRKtChLttls7BG&index=11
+  static void rightRotateArray(int[] a, int k){
+    //int[] a = {1,2,3,4,5,6,7};
+    int n = a.length;
+
+    //int s1 = n-k;
+    //int s2 = k;
+    int s3 = (n-k)%n;
+    int s4 = k%n;
+    reverseArray(a, 0, s3-1);
+    reverseArray(a, s3, n-1);
+    reverseArray(a, 0, n-1);
+
+  }
+
+  static void leftRotateArray(int[] a, int k){
+
+    int n = a.length;
+    int s3 = k%n;
+    reverseArray(a, 0, s3-1);
+    reverseArray(a, s3, n-1);
+    reverseArray(a, 0, n-1);
+
+  }
+
+  static void reverseArray(int[] a, int s, int l){
+    while(s < l){
+      int t = a[s];
+      a[s] = a[l];
+      a[l] = t;
+      s++;
+      l--;
+    }
+  }
+
+
   //int[] a = {1,2,3,4,5};
-  //This is wrong solution, see below - https://www.geeksforgeeks.org/array-rotation/
+  //This is wrong solution, see above solution - https://www.geeksforgeeks.org/array-rotation/
   static void rotateArray(int[] a,  int N){
     for(int i=0; i<a.length; i++){
       int temp = a[(i+N) % N];
@@ -257,6 +294,7 @@ public class SA {
     }
   }
 
+  ////This is wrong solution, see above solution
   static void rotateArray1(int[] a,  int N){
     for(int i=0; i<a.length; i++){
       int t = Math.abs(i-N);
@@ -463,7 +501,6 @@ public class SA {
   }
 
 
-
   public static boolean stepMaze(int[][] paths, int x, int y, int i, int j){
     counter++;
     if(x == i && y == j){
@@ -500,12 +537,36 @@ public class SA {
     return false;
   }
 
+  static void solveMaze2(int[][] a, int i, int j, int k, int l){
+    System.out.println(stepMaze2(a, i,j,k,l));
+    System.out.println(ArrayUtils.toString(a));
+  }
+
+  static boolean stepMaze2(int[][] a, int x, int y, int i, int j){
+    if(x == i && y == j) return true;
+
+    if(x < 0 || x >= a.length || y < 0 || y >= a[0].length) return false;
+
+    if(a[x][y] == 1 || a[x][y] == 2) return false;
+    a[x][y] = 2;
+
+    if(stepMaze2(a, x, y+1, i,j)) return true;
+    if(stepMaze2(a, x-1, y, i,j)) return true;
+    if(stepMaze2(a, x+1, y, i,j)) return true;
+    if(stepMaze2(a, x, y-1, i,j)) return true;
+    a[x][y] = 0;
+
+    return false;
+  }
+
   //https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/
   static boolean solveMaze1(int[][] paths, int x, int y , int i, int j){
     if(stepMaze1(paths, x, y, i, j)){
+      System.out.println(ArrayUtils.toString(paths));
       paths[x][y] = 5;
       return true;
     }
+    System.out.println("No Path "+ArrayUtils.toString(paths));
     return false;
   }
 
@@ -773,6 +834,7 @@ public class SA {
   }
 
   //https://practice.geeksforgeeks.org/problems/equilibrium-point/0
+  //see better solution below
   static void findEq(int[] a){
 
     if(a.length == 1){
@@ -1083,6 +1145,7 @@ public class SA {
 
   //{1 2 3 7 5}
   //https://practice.geeksforgeeks.org/problems/subarray-with-given-sum/0
+  //better solution below
   static void subArrayWithGivenSum(int[] a, int k){
     for(int i = 0; i < a.length; i++){
       int sum = 0;
@@ -1108,6 +1171,28 @@ public class SA {
         break;
       }
     }
+  }
+
+  static Map<Integer, Integer> subArrayWithGivenSumImproved(int[] a, int k){
+    Map<Integer, Integer> map = new HashMap<>();
+    int currentSum = 0;
+    for(int i = 0; i < a.length; i++){
+      currentSum = currentSum + a[i];
+      if(currentSum == k){
+        System.out.println("Found");
+      }else {
+        if(map.containsKey(currentSum - k)){
+          //to print the element 1) add the current sum && remove currentsum - sum
+          map.put(currentSum, i);
+          map.remove(currentSum - k);
+          System.out.println("Found between ");
+          return map;
+        }else{
+          map.put(currentSum, i);
+        }
+      }
+    }
+    return map;
   }
 
   //https://practice.geeksforgeeks.org/problems/maximum-of-all-subarrays-of-size-k/0
@@ -1944,6 +2029,7 @@ public class SA {
     return result;
   }
 
+
   //https://www.geeksforgeeks.org/longest-common-prefix-set-4-binary-search/
   static String findLongestCommonPrefix(String[] a, int n){
     String result = "";
@@ -2289,6 +2375,7 @@ public class SA {
     return false;
   }
 
+
   static boolean isQueenSafe(int a[][], int row, int col){
 
     int i, j;
@@ -2324,26 +2411,211 @@ public class SA {
     return true;
   }
 
+
   //TODO
   //https://www.geeksforgeeks.org/minimize-number-unique-characters-string/
   //https://www.geeksforgeeks.org/lexicographically-middle-string/
 
   //https://www.geeksforgeeks.org/edit-distance-and-lcs-longest-common-subsequence/
 
+  static void streamTest(){
+    int[] a = {2,3,4,1,5,6,9,7,8};
+    Stream<int[]> s1 = Stream.of(a);
+    Stream.of(a).forEach(System.out::println); //print the array object instead of elements in it.
+    Stream.of(a).flatMapToInt(x -> Arrays.stream(x)).forEach(System.out::println); //flatmap and print individual elements
+  }
+
+  //https://practice.geeksforgeeks.org/problems/relative-sorting/0
+  static void relativeSortint(){
+    int A1[] = {2, 1, 2, 5, 7, 1, 9, 3, 6, 8, 8};
+    int A2[] = {2, 1, 8, 3};
+    HashMap<Integer, Integer> hm = new HashMap<>();
+    for(int i = 0; i < A2.length; i++){
+      hm.put(A2[i], i);
+    }
+    int[] A3 = Arrays.stream(A1).boxed().sorted((i1, i2) -> {
+      i1 = hm.getOrDefault(i1, i1);
+      i2 = hm.getOrDefault(i2, i2);
+      return i1 - i2;
+    }).mapToInt(i -> i).toArray();
+    System.out.println(Arrays.toString(A3));
+  }
+
+  //https://www.geeksforgeeks.org/converting-roman-numerals-decimal-lying-1-3999/
+  /*
+  1. Split the Roman Numeral string into Roman Symbols (character).
+  2. Convert each symbol of Roman Numerals into the value it represents.
+  3. Take symbol one by one from starting from index 0:
+  4. If current value of symbol is greater than or equal to the value of next symbol, then add this value to the running total.
+  5 else subtract this value by adding the value of next symbol to the running total.*/
+  static void romanStringToNumber(String s){
+
+    Map<Character, Integer> hm = new HashMap<>();
+    hm.put('I', 1);hm.put('V', 5); hm.put('X', 10); hm.put('L', 50); hm.put('C', 100); hm.put('D', 500); hm.put('M', 1000);
+
+    int result = 0;
+
+    for(int i = 0; i < s.length(); i++){
+      int s1 = hm.get(s.charAt(i));
+
+      if(i+1 < s.length()){
+        int s2 = hm.get(i+1);
+        if(s1 >= s2){ //usecase II
+          result = result+s1;
+        }else{ //usecase IV
+          result = result + s2 - s1;
+          i++;
+        }
+      }else{
+        result = result+1;
+        i++;
+      }
+    }
+  }
+
+  //https://practice.geeksforgeeks.org/problems/form-a-palindrome/0
+  //https://www.geeksforgeeks.org/minimum-insertions-to-form-shortest-palindrome/
+  static int formPalindrome(char[] c){
+    for(int i=c.length-1; i>=0; i--){
+        if(isPalindrome(c, 0, i)){
+          return (c.length - i - 1);
+        }
+    }
+    return 0;
+  }
+
+  static boolean isPalindrome(char[] c, int s, int l){
+    while(s < l){
+      if(c[s] != c[l]) return false;
+      s++;
+      l--;
+    }
+    return true;
+  }
+
+  //https://www.youtube.com/watch?v=uFso48YRRao&index=16&list=PLeIMaH7i8JDjd21ZF6jlRKtChLttls7BG
+  static void nextGreaterElement(int[] a){
+    //int[] a = {5, 3, 2, 10, 6,8, 1, 4, 12, 7, 4};
+    Stack<Integer> s = new Stack<>();
+    for(int i = 0; i < a.length; i++){
+
+      if(s.isEmpty() || s.peek() > a[i]){
+        s.push(a[i]);
+      }else{
+        while(!s.isEmpty() && s.peek() < a[i]){
+          int t = s.pop();
+          System.out.printf("%d -> %d %n", t, a[i]);
+        }
+        s.push(a[i]);
+      }
+    }
+  }
+
+  //https://www.youtube.com/watch?v=s1xA_K1JReo&index=20&list=PLeIMaH7i8JDjd21ZF6jlRKtChLttls7BG
+  static void findPairEqualToSum(int[] a, int sum){
+    //Option-1 put everything in hashmap first, in second iteration for each element minus the sum and see if pair exist
+    //Option-2 sort the array and do while loop s=0 l=a.lenght-1
+    Arrays.sort(a);
+    int s = 0;
+    int l = a.length - 1;
+
+    while(s < l){
+      if(a[s] + a[l] == sum) {
+        //print
+        s++;
+        l--;
+      }else if(a[s] + a[l] < sum ){
+        s++;
+      }else{
+        l--;
+      }
+    }
+  }
+
+  //https://www.youtube.com/watch?v=2Bn5uBnmptU&index=21&list=PLeIMaH7i8JDjd21ZF6jlRKtChLttls7BG
+  static void findNumberOddNumberOfTimes(int[] a){
+    int result = a[0] ^ a[1];
+    for(int i = 2; i < a.length; i++){
+      result = result ^ a[i];
+    }
+    System.out.println(result);
+  }
+
+  //https://www.youtube.com/watch?v=T8ErAYobcbc&list=PLeIMaH7i8JDim_JbrI07PxNdWqrmrq5RK
+  static void printMatrixDiognally(int[][] a){
+    for(int i = 0; i < a.length; i++){
+      int r = i;
+      int c = 0;
+      while(r >= 0 && c < a[0].length){
+        System.out.print(a[r][c] + ",");
+        r--;
+        c++;
+      }
+      System.out.println();
+    }
+    for(int i = 1; i < a[0].length; i++){
+      int r = a.length -1;
+      int c = i;
+      while(r >= 0 && c < a[0].length){
+        System.out.print(a[r][c] + ",");
+        r--;
+        c++;
+      }
+      System.out.println();
+    }
+
+  }
+
 
   public static void main(String[] args){
+    int[][] printMatrixDiognally = {
+        {1,2,3,4, 5},
+        {6,7,8,9, 10},
+        {11,12,13,14,15},
+        {16,17,18,19,20}
+        //{21,22,23,24,25}
+    };
 
-    int board[][] = {{0, 0, 0, 0},  
+    SA.printMatrixDiognally(printMatrixDiognally);
+    int[] findNumberOddNumberOfTimes = {1,5,5,1,2,3,4,2,1,2,1,2,3,2, 4};
+    SA.findNumberOddNumberOfTimes(findNumberOddNumberOfTimes);
+
+    int[] ngea = {5, 3, 2, 10, 6,8, 1, 4, 12, 7, 4};
+    nextGreaterElement(ngea);
+
+    int[] ra1 = {1,2,3,4,5,6,7};
+    SA.leftRotateArray(ra1, 2);
+
+    System.out.println(SA.formPalindrome("JAVA".toCharArray()));
+    System.out.println(SA.formPalindrome("LOL".toCharArray()));
+
+    final int[][] solveMaze2 = {
+        {0,0,1,0,1},
+        {0,0,1,0,0},
+        {0,0,0,0,1},
+        {0,1,0,0,0},
+        {0,1,1,1,0}
+
+    };
+    SA.solveMaze2(solveMaze2, 0, 0, 4, 4);
+
+    SA.relativeSortint();
+
+    SA.streamTest();
+
+    int board[][] = {{0, 0, 0, 0},
         {0, 0, 0, 0},
         {0, 0, 0, 0},
         {0, 0, 0, 0}
     };
+
     queen(board, 0);
-
-
     System.out.println(ArrayUtils.toString(board));
+
     SA.longestSubStringWithDistinctVowles("artyebui", 2);
+
     SA.longestSubStringWithoutRepeatingChars("ABDEFGABEF");
+
     StringBuilder sbAddBinary = new StringBuilder();
     SA.addBinary("1", "1", 0, 0, sbAddBinary);
     System.out.println(sbAddBinary.reverse());
@@ -2359,7 +2631,7 @@ public class SA {
     SA.chekBinaryStringPowerOf4or6("100110110", 2);
 
 
-    SA.numberOfCounterClockwise();
+    //SA.numberOfCounterClockwise();
     //int[] mj = {1,0,1,0,1};
     int[] mj = {1,1,1,1,0};
     System.out.println(SA.maximumJumpToReach(mj));
@@ -2476,6 +2748,8 @@ public class SA {
     SA.subArrayWithGivenSum(sumInAnArray, 12);
     int[] sumInAnArray1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     SA.subArrayWithGivenSum(sumInAnArray1, 15);
+    SA.subArrayWithGivenSumImproved(sumInAnArray, 12);
+    SA.subArrayWithGivenSumImproved(sumInAnArray1, 9);
 
     int[] findMaxSubArrayElement = {1, 2, 3, 1, 4, 5, 2, 3, 6};
     int[] findMaxSubArrayElement1 = {8, 5, 10, 7, 9, 4, 15, 12, 90, 13};

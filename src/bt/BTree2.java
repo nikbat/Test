@@ -74,6 +74,7 @@ public class BTree2<T extends Comparable<T>> {
 		4. Level Order Traversal of binary Tree
 	 */
 
+
 	public boolean bfs(BNode<T> node, T t){
 		if(node == null){
 			return false;
@@ -120,7 +121,7 @@ public class BTree2<T extends Comparable<T>> {
 		if(n.data == t){
 			return true;
 		}else if(t > n.data){
-			return dfsRecursive(n.right, t);
+			return dfsRecursive(n.right, t); //it does not matter we push left or itgh node first
 		}else if(t < n.data){
 			return dfsRecursive(n.left, t);
 		}
@@ -1161,9 +1162,36 @@ public class BTree2<T extends Comparable<T>> {
     }else{
       return 1 + findTotalNumberOfNodes(n.left) + findTotalNumberOfNodes(n.right);
     }
-
   }
 
+  Map<Integer, List<BNode<Integer>>> hm = new HashMap<>();
+  List<BNode<Integer>> l1 = new ArrayList();
+  int i = 0;
+  void lot(BNode<Integer> n){
+    if(n == null){
+      return;
+    }
+
+    Queue<BNode<Integer>> q = new ArrayDeque<>();
+    q.add(n);
+    q.add(new BNode<>(-1));
+    while(!q.isEmpty()){
+      BNode<Integer> t = q.poll();
+      if(t.data != -1){
+        l1.add(t);
+        if(t.left != null) q.add(t.left);
+        if(t.right != null) q.add(t.right);
+      }else{
+        if(!q.isEmpty()) {
+          hm.put(i, l1);
+          i++;
+          l1 = new ArrayList<>();
+          q.add(new BNode<>(-1));
+        }
+      }
+    }
+
+  }
 
 	public static void main(String[] args){
 
@@ -1205,6 +1233,9 @@ public class BTree2<T extends Comparable<T>> {
 		tree1.treeInsert(45);
 		tree1.treeInsert(30);
 		tree1.treeInsert(40);
+
+    tree1.lot(tree1.root);
+    System.out.println(tree1.hm);
 
 		tree1.allNodedsHavingKLeaves(tree1.root, 2);
 
