@@ -2,6 +2,7 @@ package ll2;
 
 import java.util.LinkedList;
 
+import com.sun.org.apache.xml.internal.security.algorithms.implementations.IntegrityHmac;
 import ll.LNode;
 import ll.MyLinkedList;
 
@@ -147,7 +148,7 @@ public class MyLinkedList2<T> {
 		}
 
 		L2Node<Integer> node = new L2Node<>((data) % 10);
-		node.next = sum(r1 != null ? r1.next : null, r2 != null ? r2.next : null,  (data +carry) / 10);
+		node.next = sum(r1 != null ? r1.next : null, r2 != null ? r2.next : null,  (data) / 10);
 		return node;
 	}
 	
@@ -179,7 +180,6 @@ public class MyLinkedList2<T> {
 
 		return prev;
 	}
-
 
 	//https://practice.geeksforgeeks.org/problems/rotate-a-linked-list/1
 	L2Node<T> rotate(L2Node<T> root, int k){
@@ -273,6 +273,7 @@ public class MyLinkedList2<T> {
 
 		return root;
 	}
+
 
 	//https://practice.geeksforgeeks.org/problems/intersection-point-in-y-shapped-linked-lists/1
 	//https://www.youtube.com/watch?v=_7byKXAhxyM&index=16&list=PLeIMaH7i8JDio7glJoO1rQIAo4g1msRRG
@@ -521,6 +522,7 @@ public class MyLinkedList2<T> {
 		sl.add(9);
 		sl.add(10);
 
+		sl.print(sl.root);
 		MyLinkedList2.swapList(sl.root);
 		sl.print(sl.root);
 

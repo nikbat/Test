@@ -128,8 +128,6 @@ public class BTree2<T extends Comparable<T>> {
 		return false;
 	}
 
-
-
 	// build tree from postorder post order inorder in order
 	private BNode<T> buildTree(List<T> ioList, List<T> poList, int inOrderLower, int inOrderUpper,int postOrderLower, int postOrderUpper){
 
@@ -168,6 +166,10 @@ public class BTree2<T extends Comparable<T>> {
 		}
 	}
 
+	static void iot(BNode<Integer> n){
+
+	}
+
 	public void inOrderTraversalTraversal(){ //*
 
 		if (root == null) {
@@ -202,8 +204,6 @@ public class BTree2<T extends Comparable<T>> {
 		}
 	}
 
-
-
 	List<T> po = new ArrayList<T>();
 
 	public void preOrderTraversal(BNode<T> node){
@@ -215,6 +215,22 @@ public class BTree2<T extends Comparable<T>> {
 		preOrderTraversal(node.left);
 		preOrderTraversal(node.right);
 
+	}
+
+	static void pot(BNode<Integer> n){
+
+		if(n == null) return;
+
+		Stack<BNode<Integer>> q = new Stack<>();
+		q.add(n);
+
+		while(!q.isEmpty()){
+			n = q.pop();
+			System.out.print(n.data + ",");
+			if(n.right != null) q.add(n.right);
+			if(n.left != null) q.add(n.left);
+
+		}
 	}
 
 	public void preOrderTraversalReccursive(BNode<T> node){
@@ -446,8 +462,6 @@ public class BTree2<T extends Comparable<T>> {
 
 		return covers(root.left, n) || covers(root.right, n);
 	}
-
-
 
 	//http://www.youtube.com/watch?v=jSZ4e3cmh2A
 	private BNode<T> inOrderSuccessor(BNode<T> node){
@@ -802,6 +816,7 @@ public class BTree2<T extends Comparable<T>> {
 		}
 	}
 
+
 	//https://www.youtube.com/watch?v=0QOtVxTVj4w
 	//build tree from pre order traversal VERY EASY
 	//int[] pota = {12,9,5,4,7,10,15,13,19,16};
@@ -832,8 +847,8 @@ public class BTree2<T extends Comparable<T>> {
 
 	}
 
-	//TODO: https://www.geeksforgeeks.org/construct-binary-tree-from-inorder-traversal/
 
+	//TODO: https://www.geeksforgeeks.org/construct-binary-tree-from-inorder-traversal/
 
 
 
@@ -964,8 +979,7 @@ public class BTree2<T extends Comparable<T>> {
     }
   }
 
-
-	//vertical order Traversal
+  //vertical order Traversal
 	//https://www.youtube.com/watch?v=PQKkr036wRc
   // Create a HashMap<Integer, LinkedList> for root put i=0 for left i-1 and for right i+1
 	HashMap<Integer,LinkedList<BNode<T>>> horizontalDistanceMap =  new HashMap<>();
@@ -1058,6 +1072,7 @@ public class BTree2<T extends Comparable<T>> {
 
 	}
 
+
 	int findMaxHeight(BNode<T> n){
 		if(n == null){
 			return 0;
@@ -1110,6 +1125,7 @@ public class BTree2<T extends Comparable<T>> {
     rlpath.pop();
 
   }
+
 
   //https://www.youtube.com/watch?v=zEIWqb8nWDk&index=32&list=PLeIMaH7i8JDj7DnmO7lll97P1yZjMCpgY
   public boolean isSumTree(BNode<Integer> n){
@@ -1210,8 +1226,9 @@ public class BTree2<T extends Comparable<T>> {
 		tree.treeInsert(175);
 		tree.treeInsert(110);
 
-		tree.serialize(tree.root);
+		tree.printLeafNode(tree.root);
 
+		tree.serialize(tree.root);
 
 		/*tree.treeInsert(500);
 		tree.treeInsert(700);
@@ -1286,6 +1303,9 @@ public class BTree2<T extends Comparable<T>> {
 		System.out.println();
 
 		tree.preOrderTraversal(tree5.root);
+		System.out.println();
+
+		tree.pot(tree1.root);
 		System.out.println();
 
 		tree.inOrderTraversal(tree.root);

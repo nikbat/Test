@@ -4,6 +4,7 @@ import ll.LLFinal;
 import ll.LNode;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -27,7 +28,7 @@ public class SA {
     int copyOfNumber = number;
     int i;
     for(i = 2; i < copyOfNumber; i ++){
-      if(copyOfNumber % 2 == 0){
+      if(copyOfNumber % i == 0){
         copyOfNumber = copyOfNumber/i;
         i--;
       }
@@ -260,6 +261,7 @@ public class SA {
     reverseArray(a, 0, s3-1);
     reverseArray(a, s3, n-1);
     reverseArray(a, 0, n-1);
+    System.out.println(ArrayUtils.toString(a));
 
   }
 
@@ -356,6 +358,7 @@ public class SA {
     return number;
   }
 
+
   static String concatStaring(String s) {
     //String s = "45eeeedfghfffeff62";
     char[] sa = s.toCharArray();
@@ -443,6 +446,7 @@ public class SA {
     return false;
   }
 
+  //TODO:
   //https://www.geeksforgeeks.org/calculate-angle-hour-hand-minute-hand/
   static void findAngle(int h, int m){
 
@@ -559,11 +563,21 @@ public class SA {
     return false;
   }
 
+  /*static final int[][] paths = {
+      {0,0,1,0,1},
+      {0,0,0,0,0},
+      {0,1,1,1,0},
+      {0,1,1,0,0},
+      {0,1,1,0,0}
+
+  };*/
+
+
+
   //https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/
   static boolean solveMaze1(int[][] paths, int x, int y , int i, int j){
     if(stepMaze1(paths, x, y, i, j)){
       System.out.println(ArrayUtils.toString(paths));
-      paths[x][y] = 5;
       return true;
     }
     System.out.println("No Path "+ArrayUtils.toString(paths));
@@ -655,7 +669,7 @@ public class SA {
       }
     }
   }
-
+  
   //https://www.geeksforgeeks.org/sort-matrix-row-wise-column-wise/
   static void sort2DArray(int[][] a){
     sort2DArrayByRow(a);
@@ -698,6 +712,7 @@ public class SA {
     System.out.println(Arrays.toString(a));
   }
 
+
   static void arrangeArray1(int[] a){
 
     for(int i = 0; i < a.length; i++){
@@ -719,8 +734,7 @@ public class SA {
     }
   }
 
-
-
+  //TODO:
   static String timeConversion(String s) {
     if(s == null){
       return "";
@@ -807,6 +821,7 @@ public class SA {
   }
 
   //https://practice.geeksforgeeks.org/problems/subarray-with-given-sum/0
+  //Better solutions below
   static void findSum(int[] a, int k){
 
     for(int i = 0 ; i < a.length; i++){
@@ -832,6 +847,40 @@ public class SA {
       }
     }
   }
+  //https://practice.geeksforgeeks.org/problems/subarray-with-given-sum/0
+  //int[] a = {1, 2, 3, 7, 5}; int sum =5;
+  //1. create a map, 2. start single iteration,
+  //3. if current_sum == sum return;
+  //else current_sum - sum is present in array, if present return true
+  // else put current_sum in map
+  //map = [currentsum=1, position=0], [currentsum=3, position=1], [currentsum=6, position=2] here 6-5 = 1 is present in the map, remove it
+
+  //Approach:2  //https://www.geeksforgeeks.org/find-subarray-with-given-sum/
+  //Initialize a variable curr_sum as first element. curr_sum indicates the sum of current subarray. Start from the second element and add all elements one by one to the curr_sum. If curr_sum becomes equal to sum, then print the solution. If curr_sum exceeds the sum, then remove trailing elements while curr_sum is greater than sum.
+
+
+  static boolean subArrayWithGivenSum1(int[] a, int sum){
+
+    int start = 0;
+    int current_sum = 0;
+    for(int i = 0; i < a.length; i++){
+      current_sum = current_sum + a[i];
+      while(current_sum > sum && start < a.length){
+        current_sum = current_sum - a[start];
+        start++;
+      }
+
+
+      if(current_sum == sum){
+        System.out.printf("%d, %d", start, i);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
 
   //https://practice.geeksforgeeks.org/problems/equilibrium-point/0
   //see better solution below
@@ -860,8 +909,9 @@ public class SA {
     }
   }
 
+
   //https://www.geeksforgeeks.org/given-an-array-of-numbers-arrange-the-numbers-to-form-the-biggest-number/
-  static void printLargestNumber(String[] a, int n){
+  static void printLargestNumber(String[] a){
     Arrays.sort(a, (x,y) -> {
       String xy = x+y;
       String yx = y+x;
@@ -2030,6 +2080,9 @@ public class SA {
   }
 
 
+
+
+
   //https://www.geeksforgeeks.org/longest-common-prefix-set-4-binary-search/
   static String findLongestCommonPrefix(String[] a, int n){
     String result = "";
@@ -2375,6 +2428,23 @@ public class SA {
     return false;
   }
 
+  static boolean pq(int[][] a, int col){
+    if(col >= a[0].length) {
+      return true;
+    }
+
+    for(int i = 0; i < a.length; i++){
+      if(isQS(a, i, col)){
+        a[i][col] = 1;
+        if(pq(a, col+1)){
+          return true;
+        }
+        a[i][col] = 0;
+      }
+    }
+    return false;
+  }
+
 
   static boolean isQueenSafe(int a[][], int row, int col){
 
@@ -2411,6 +2481,33 @@ public class SA {
     return true;
   }
 
+  static boolean isQS(int[][] a, int r, int c){
+    //check left cols
+
+    int i, j;
+    for(i = 0; i < c; i++){
+      if(a[r][i] == 1) return false;
+    }
+
+    //check left diagnal up
+    i = r;
+    j = c;
+    while(i >= 0 && j >= 0){
+      if(a[i][j] == 1) return false;
+      i--;
+      j--;
+    }
+
+    i = r;
+    j = c;
+    while(i < a.length && j >= 0){
+      if(a[i][j] == 1) return false;
+      i++;
+      j--;
+    }
+    return true;
+  }
+
 
   //TODO
   //https://www.geeksforgeeks.org/minimize-number-unique-characters-string/
@@ -2440,6 +2537,7 @@ public class SA {
     }).mapToInt(i -> i).toArray();
     System.out.println(Arrays.toString(A3));
   }
+
 
   //https://www.geeksforgeeks.org/converting-roman-numerals-decimal-lying-1-3999/
   /*
@@ -2563,21 +2661,30 @@ public class SA {
       }
       System.out.println();
     }
-
   }
 
+  static void test(){
+    float result = true ? 1.0f : 2.0f;
+    int r1 = true ? 1 : 4;
+    System.out.println(true ? 1 : 4);
+  }
 
   public static void main(String[] args){
+
     int[][] printMatrixDiognally = {
-        {1,2,3,4, 5},
-        {6,7,8,9, 10},
+        {1, 2, 3, 4, 5},
+        {6, 7, 8, 9, 10},
         {11,12,13,14,15},
         {16,17,18,19,20}
         //{21,22,23,24,25}
     };
 
+    int[] rotateArray = {1,2,3,4,5,6,7,8,9};
+    rightRotateArray(rotateArray, 2);
+
+
     SA.printMatrixDiognally(printMatrixDiognally);
-    int[] findNumberOddNumberOfTimes = {1,5,5,1,2,3,4,2,1,2,1,2,3,2, 4};
+    int[] findNumberOddNumberOfTimes = {1,5,5,1,2,3,4,2,1,2,1,2,3,2,4};
     SA.findNumberOddNumberOfTimes(findNumberOddNumberOfTimes);
 
     int[] ngea = {5, 3, 2, 10, 6,8, 1, 4, 12, 7, 4};
@@ -2609,6 +2716,8 @@ public class SA {
         {0, 0, 0, 0}
     };
 
+    pq(board, 0);
+    System.out.println(ArrayUtils.toString(board));
     queen(board, 0);
     System.out.println(ArrayUtils.toString(board));
 
@@ -2626,10 +2735,7 @@ public class SA {
     //http://www.java67.com/2015/08/how-to-swap-two-integers-without-using.html
     //https://medium.com/@krishankantsinghal/my-first-blog-on-medium-583159139237
 
-
-
     SA.chekBinaryStringPowerOf4or6("100110110", 2);
-
 
     //SA.numberOfCounterClockwise();
     //int[] mj = {1,0,1,0,1};
@@ -2891,16 +2997,30 @@ public class SA {
         {0,0,1,0,1},
         {0,0,1,0,0},
         {0,0,0,0,1},
-        {0,1,0,0,1},
+        {0,1,0,0,0},
         {0,1,1,1,0}
 
     };
-    System.out.println(SA.solveMaze1(paths1,0,0,4,4));
+    SA.solveMaze2(paths1,0,0,4,4);
 
     //SA.permute("ABCD");
     //SA.compute("ABCD", 0);
 
+    int mat[][] = { {4, 1, 3},
+      {9, 6, 8},
+      {5, 2, 7} };
+
+    sort2DArray(mat);
+    System.out.println(ArrayUtils.toString(mat));
+
+    int[] subArrayWithGivenSum1 = {1, 2, 3, 7, 5};
+    int[] subArrayWithGivenSum2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    SA.subArrayWithGivenSum1(subArrayWithGivenSum1, 12);
+    SA.subArrayWithGivenSum1(subArrayWithGivenSum2, 15);
+
     SA.totalParenthesis(new char[6], 3, 0, 0, 0);
+
+
 
   }
 
