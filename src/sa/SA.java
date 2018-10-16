@@ -265,6 +265,7 @@ public class SA {
 
   }
 
+
   static void leftRotateArray(int[] a, int k){
 
     int n = a.length;
@@ -284,7 +285,7 @@ public class SA {
       l--;
     }
   }
-
+  
 
   //int[] a = {1,2,3,4,5};
   //This is wrong solution, see above solution - https://www.geeksforgeeks.org/array-rotation/
@@ -357,6 +358,8 @@ public class SA {
     }
     return number;
   }
+
+
 
 
   static String concatStaring(String s) {
@@ -856,7 +859,11 @@ public class SA {
   //map = [currentsum=1, position=0], [currentsum=3, position=1], [currentsum=6, position=2] here 6-5 = 1 is present in the map, remove it
 
   //Approach:2  //https://www.geeksforgeeks.org/find-subarray-with-given-sum/
-  //Initialize a variable curr_sum as first element. curr_sum indicates the sum of current subarray. Start from the second element and add all elements one by one to the curr_sum. If curr_sum becomes equal to sum, then print the solution. If curr_sum exceeds the sum, then remove trailing elements while curr_sum is greater than sum.
+  //Initialize a variable curr_sum as first element.
+  // curr_sum indicates the sum of current subarray.
+  // Start from the second element and add all elements one by one to the curr_sum.
+  // If curr_sum becomes equal to sum, then print the solution.
+  // If curr_sum exceeds the sum, then remove trailing elements while curr_sum is greater than sum.
 
 
   static boolean subArrayWithGivenSum1(int[] a, int sum){
@@ -941,8 +948,10 @@ public class SA {
   }
 
   //https://practice.geeksforgeeks.org/problems/form-a-palindrome/0
+  //NOTE This is a wrong solution
+  // Correct solution is below
   static int numberOfCharsToFormPalindrome(String s){
-    //NOTE This is a wrong solution
+
 
     int count = 0;
     if(s == null || s.length() == 1){
@@ -1100,7 +1109,7 @@ public class SA {
   //1 101 2 3 100 4 5
   static void printMaximumSumSubSequence1(int[] a){
 
-    List<List<Integer>> subsequence = new ArrayList<>(); // there is no use of this array, I added it for see sequences
+    List<List<Integer>> subsequence = new ArrayList<>(); // there is no use of this array, I added it to see sequences
     int sum = 0;
 
     for(int i = 0; i < a.length; i++){
@@ -1119,7 +1128,7 @@ public class SA {
             currentSum = currentSum + d;
           }
 
-          // recaluclate max
+          // re-caluclate max
           if(currentSum > sum){
             sum = currentSum;
           }
@@ -1172,6 +1181,7 @@ public class SA {
 
   //Kaden's algo
   //https://practice.geeksforgeeks.org/problems/kadanes-algorithm/0
+  //{4,-3,-2,3 1,-2,-3, 4, 2, -6, -3, -1, 3, 1, 2}
   static void printMaxSubSequenceWithIndexes(int[] a){
     int sum = a[0];
     int currentSum = 0;
@@ -1247,6 +1257,8 @@ public class SA {
 
   //https://practice.geeksforgeeks.org/problems/maximum-of-all-subarrays-of-size-k/0
   //1 2 3 1 4 5 2 3 6
+  //https://www.geeksforgeeks.org/sliding-window-maximum-maximum-of-all-subarrays-of-size-k/
+  //Apprach -2
   static void printMaxOfAllSubArray(int[] a, int k){
 
     boolean noSubArrayPossible = false;
@@ -1269,6 +1281,8 @@ public class SA {
 
     System.out.println();
   }
+
+
 
   //https://practice.geeksforgeeks.org/problems/reverse-array-in-groups/0
   static void reverseArrayInGroups(int[] a, int k){
@@ -1417,11 +1431,27 @@ public class SA {
 
   }
 
+  static void sortElementsInFrequency1(int[] a){
+    Map<Integer, Integer> fm = new HashMap<>();
+    Arrays.stream(a).forEach(e -> {
+      fm.merge(e, 1, Integer::sum);
+    });
+
+    /*a = Arrays.stream(a).boxed().sorted((i,j) -> {
+      return fm.getOrDefault(j, 0) - fm.getOrDefault(i, 0);
+    }).mapToInt(i -> i).toArray();*/
+
+    a = Arrays.stream(a).boxed().sorted(Comparator.comparingInt(n -> fm.getOrDefault(n, 0)).reversed()).mapToInt(i -> i).toArray();
+
+    System.out.println(ArrayUtils.toString(a));
+  }
+
   //https://www.youtube.com/watch?v=jH_5ypQggWg
   static void minimumNumberOfJumpsToReach(int[] a){
 
   }
 
+  //TODO
   static void towerOfHanoi(int n, char from_rod, char to_rod, char aux_rod) {
     if (n == 1) {
       System.out.println("Move disk 1 from rod " +  from_rod + " to rod " + to_rod);
@@ -1575,6 +1605,7 @@ public class SA {
   }
 
   //https://www.geeksforgeeks.org/find-a-partition-point-in-array/
+  //Improved solution here https://www.geeksforgeeks.org/find-the-element-before-which-all-the-elements-are-smaller-than-it-and-after-which-all-are-greater-than-it/
   static int findPartitionPoint(int[] a){
     int partitionPoint = -1;
 
@@ -1633,6 +1664,7 @@ public class SA {
 
   }
 
+  //TODO
   static void isStringRotatedByTwoPlaces(String s1, String s2){
     //s1 = "amazon";
     //s2 = "onamaz";
@@ -1684,6 +1716,7 @@ public class SA {
 
   }
 
+  //TODO
   //https://practice.geeksforgeeks.org/problems/recursively-remove-all-adjacent-duplicates/0
   static void removeAdjacentDuplicates(String s){
     char[] sa = s.toCharArray();
@@ -1740,7 +1773,6 @@ public class SA {
   }
 
   //int[] a = {9,12,15,17,25,28,32,37,3,5,7,8};
-
   static int findElementInARotatedArray(int[] a, int k){
     int s = 0;
     int l = a.length-1;
@@ -1864,6 +1896,7 @@ public class SA {
     return false;
   }
 
+  //TODO:
   //Spirally traversing a matrix
   //https://practice.geeksforgeeks.org/problems/spirally-traversing-a-matrix/0
   static void spiralTraverse(int[][] a){
@@ -2445,6 +2478,22 @@ public class SA {
     return false;
   }
 
+  static boolean pq1(int[][] a, int col){
+    if(col >= a[0].length) {
+      return true;
+    }
+
+    for(int i = 0; i < a.length; i++) {
+      if (isQueenSafe(a, i, col)){
+        a[i][col] = 1;
+        if(pq1(a, col+1)){
+          return true;
+        }
+        a[i][col] = 0;
+      }
+    }
+    return false;
+  }
 
   static boolean isQueenSafe(int a[][], int row, int col){
 
@@ -2546,10 +2595,15 @@ public class SA {
   3. Take symbol one by one from starting from index 0:
   4. If current value of symbol is greater than or equal to the value of next symbol, then add this value to the running total.
   5 else subtract this value by adding the value of next symbol to the running total.*/
-  static void romanStringToNumber(String s){
 
-    Map<Character, Integer> hm = new HashMap<>();
+  static Map<Character, Integer> hm = new HashMap<>();
+
+  static{
+
     hm.put('I', 1);hm.put('V', 5); hm.put('X', 10); hm.put('L', 50); hm.put('C', 100); hm.put('D', 500); hm.put('M', 1000);
+
+  }
+  static void romanStringToNumber(String s){
 
     int result = 0;
 
@@ -2565,7 +2619,7 @@ public class SA {
           i++;
         }
       }else{
-        result = result+1;
+        result = result+s1;
         i++;
       }
     }
@@ -2669,8 +2723,17 @@ public class SA {
     System.out.println(true ? 1 : 4);
   }
 
+  static void test1(){
+    List<Integer> l = new ArrayList<>(10);
+    l.add(5, 5);
+    l.forEach(i -> System.out.println(i));
+  }
+
   public static void main(String[] args){
 
+
+
+    test1();
     int[][] printMatrixDiognally = {
         {1, 2, 3, 4, 5},
         {6, 7, 8, 9, 10},
@@ -2680,6 +2743,8 @@ public class SA {
     };
 
     int[] rotateArray = {1,2,3,4,5,6,7,8,9};
+    System.out.println(Arrays.toString(rotateArray));
+
     rightRotateArray(rotateArray, 2);
 
 
@@ -2896,6 +2961,9 @@ public class SA {
     int[] sortElementsInFrequency = {2, 3, 2, 4, 5, 12, 2, 3, 3, 3, 12};
     SA sa = new SA();
     sa.sortElementsInFrequency(sortElementsInFrequency);
+
+    int[] sortElementsInFrequency1 = {2, 3, 2, 4, 5, 12, 2, 3, 3, 3, 12};
+    SA.sortElementsInFrequency1(sortElementsInFrequency1);
 
     int[] fs = {1,2,3,7,5};
     int[] fs1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};

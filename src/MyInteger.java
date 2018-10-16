@@ -7,10 +7,14 @@ import java.util.BitSet;
 public class MyInteger {
 
 	public static void main(String[] args) {
-		// System.out.println(Math.sqrt(49));
-		// System.out.println(MyInteger.findSqrt(49));
+	  combine1("ABCD", 0);
+	  //combine( 0);
+		System.out.println(Math.sqrt(5));
+		System.out.println(MyInteger.findSqrt(5));
+    System.out.println(MyInteger.getSquareRoot(5));
 		// combine(0);
 		// printFib();
+    System.out.println(fibn(10));
     MyInteger.findMissingNumber();
 		System.out.println(MyInteger.stringToInteger("1234"));
 		System.out.println(MyInteger.integerToString(-1234));
@@ -54,6 +58,20 @@ public class MyInteger {
   };*/
 
 
+  static double getSquareRoot(double number){
+
+    if(number < 0) return Double.NaN;
+    double currentGuess = number/2;
+    double prevGuess = 0;
+    int i = 0;
+    while(Math.abs(prevGuess - currentGuess) > 0.0001){
+      i++;
+      prevGuess = currentGuess;
+      currentGuess = (currentGuess + number/currentGuess)/2;
+    }
+    System.out.println("Loops"+i);
+    return currentGuess ;
+  }
 
 	public static double findSqrt(double number) {
 		if (number < 0) {
@@ -63,14 +81,17 @@ public class MyInteger {
 			return 1;
 		}
 
-		double precision = 0.00001;
+		//double precision = 0.00001;
+    double precision = 0.00000001f;
 		double start = 0;
 		double end = number;
-
+    int i = 0;
 		while ((end - start) > precision) {
+		  i++;
 			double mid = (start + end) / 2;
 			double msqr = mid * mid;
 			if (msqr == number) {
+        System.out.println("Loops"+i);
 				return msqr;
 			} else if (msqr < number) {
 				start = mid;
@@ -79,6 +100,7 @@ public class MyInteger {
 			}
 
 		}
+    System.out.println("Loops"+i);
 		return (start + end) / 2;
 	}
 
@@ -184,7 +206,8 @@ public class MyInteger {
 	2 3
 	4 5 6
 	7 8 9 10
-*/	
+*/
+
 	public void printFloyd(){
 		int number = 1;
 		for(int i = 1; i <= 10; i++){		
@@ -214,6 +237,22 @@ public class MyInteger {
 		}
 	}
 
+	static StringBuilder sb1 = new StringBuilder();
+	static void combine1(String str, int start){
+	  for(int i = start; i < str.length(); i++){
+
+	    sb1.append(s.charAt(i));
+
+	    System.out.println(sb1);
+
+	    if(i < s.length()){
+	      combine1(str, i+1);
+      }
+      sb1.setLength(sb1.length() - 1);
+
+    }
+  }
+
 	static String s = "ABCD";
 	static StringBuilder sb = new StringBuilder();
 	static boolean[] used = new boolean[s.length()];
@@ -237,7 +276,7 @@ public class MyInteger {
 		for (int i = start; i < s.length(); i++) {
 			sb.append(s.charAt(i));
 			System.out.println(sb);
-			combine(start + 1);
+			combine(i + 1);
 			sb.setLength(sb.length() - 1);
 		}
 		/*
@@ -260,6 +299,8 @@ public class MyInteger {
 
 		return fibn(n - 1) + fibn(n - 2);
 	}
+
+
 
 	public static String reverseString(String s) {
 		if (s.length() < 2) {

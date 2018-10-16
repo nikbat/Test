@@ -166,9 +166,31 @@ public class BTree2<T extends Comparable<T>> {
 		}
 	}
 
+	static List<Integer> it = new ArrayList<>();
 	static void iot(BNode<Integer> n){
+	  if(n == null) return;
+    iot(n.left);
+	  n.show();
+	  it.add(n.data);
+    iot(n.right);
+  }
 
-	}
+  static void pot1(BNode<Integer> n){
+    if(n == null) return;
+    pot1(n.left);
+    pot1(n.right);
+    n.show();
+    it.add(n.data);
+
+  }
+
+  static void p1ot(BNode<Integer> n){
+    if(n == null) return;
+    n.show();
+    it.add(n.data);
+    p1ot(n.left);
+    p1ot(n.right);
+  }
 
 	public void inOrderTraversalTraversal(){ //*
 
@@ -253,7 +275,6 @@ public class BTree2<T extends Comparable<T>> {
 				stack.push(temp.left);
 			}
 		}
-
 	}
 
 	public int findHeight(BNode<T> node){
@@ -441,7 +462,6 @@ public class BTree2<T extends Comparable<T>> {
 		}
 		return false;
 	}
-
 
 	private BNode<T> mostCommonAncestorOfBinaryTreeNotBST(BNode<T> root, BNode<T> n1, BNode<T> n2){
 		if(covers(root.left, n1) && covers(root.left, n2)){
@@ -708,7 +728,9 @@ public class BTree2<T extends Comparable<T>> {
 			printLeafNode(n.right);
 		}
 
+
 	}
+
 
 	void printLL(BNode<T> n){
 		if(n == null){
@@ -788,6 +810,7 @@ public class BTree2<T extends Comparable<T>> {
 		}
 
 	}
+
 
 	//https://www.geeksforgeeks.org/diagonal-traversal-of-binary-tree/
 	void printDiagonal(BNode<Integer> n, int i,  Map<Integer, List<Integer>> data){
@@ -869,13 +892,13 @@ public class BTree2<T extends Comparable<T>> {
 	//https://www.geeksforgeeks.org/check-two-nodes-cousins-binary-tree/
 	int findLevelOfNode(BNode<Integer> root, int data, int level){
 		if(root == null){
-			return 0;
+			return -1;
 		}
 		else if(root.data == data){
 			return level;
 		}else{
 			int l = findLevelOfNode(root.left, data, level+1);
-			if(l != 0){
+			if(l != -1){
 				return l;
 			}
 			return findLevelOfNode(root.right, data, level+1);
@@ -1033,8 +1056,6 @@ public class BTree2<T extends Comparable<T>> {
     verticalOrderTraversalRecrusive(n.right, i+1, hdMap);
 
   }
-
-
 
 	//Bootom View of a Binary Tree
 	//https://www.youtube.com/watch?v=V7alrvgS5AI
@@ -1226,7 +1247,24 @@ public class BTree2<T extends Comparable<T>> {
 		tree.treeInsert(175);
 		tree.treeInsert(110);
 
-		tree.printLeafNode(tree.root);
+		iot(tree.root);
+    System.out.println();
+		System.out.println(it);
+		it.clear();
+
+    p1ot(tree.root);
+    System.out.println();
+    System.out.println(it);
+    it.clear();
+
+    pot1(tree.root);
+    System.out.println();
+    System.out.println(it);
+    it.clear();
+
+
+
+    tree.printLeafNode(tree.root);
 
 		tree.serialize(tree.root);
 
@@ -1254,13 +1292,17 @@ public class BTree2<T extends Comparable<T>> {
     tree1.lot(tree1.root);
     System.out.println(tree1.hm);
 
+    p1ot(tree1.root);
+    System.out.println();
+    System.out.println(it);
+    it.clear();
+
 		tree1.allNodedsHavingKLeaves(tree1.root, 2);
 
     tree1.findSumPath(tree1.root, 425);
 		tree1.findSumPath(tree1.root, 485);
 
     tree1.printRootToLeaf(tree1.root);
-
 
 		tree1.verticalOrderTraversal(tree1.root);
     HashMap<Integer,LinkedList<BNode<Integer>>> horizontalDistanceMap1 =  new HashMap<>();
@@ -1366,10 +1408,13 @@ public class BTree2<T extends Comparable<T>> {
 		*/
 
 
-		//tree.getLL(tree.root);
-		//tree.serialize(tree.root);
+		tree.getLL(tree.root);
+		tree.serialize(tree.root);
 
-		//System.out.println("tree Height is :"+tree.findHeight(tree.root));
+
+		System.out.println("tree Height is :"+tree.findHeight(tree1.root));
+
+
 		/*System.out.println("tree contains data 100 :"+tree.treeContains(100));
 		System.out.println("tree contains data 110 :"+tree.treeContains(110));
 		System.out.println("tree contains data 175 :"+tree.treeContains(175));

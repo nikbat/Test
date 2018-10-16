@@ -374,6 +374,14 @@ public class MyLinkedList2<T> {
 
   }
 
+  static void show(L2Node<Integer> n){
+    while(n != null){
+      System.out.printf("%d->", n.data);
+      n = n.next;
+    }
+  }
+
+
 
 
 	public static void main(String[] args){
